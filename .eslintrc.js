@@ -5,5 +5,7 @@ module.exports = {
     sourceType: 'module', // Allows for the use of imports
   },
   extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
-  rules: {},
+  rules: {
+    '@typescript-eslint/no-explicit-any': 2,
+  },
 };

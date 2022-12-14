@@ -14,6 +14,7 @@ const config = {
   entry: './src/index.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
+    clean: true,
   },
   devServer: {
     open: true,
@@ -57,6 +58,9 @@ const config = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
   },
 };
 
