@@ -1,0 +1,27 @@
+@mixin fontOpenSans {
+  font: {
+    family: 'Open Sans';    
+    weight: 400;
+  }
+}
+
+@mixin fontPoppinsMedium {
+  font: {
+    family: 'Poppins';    
+    weight: 500;
+  }
+}
+
+@mixin fontPoppinsSemiBold {
+  font: {
+    family: 'Poppins';    
+    weight: 600;
+  }
+}
+
+@mixin fontPoppinsBold {
+  font: {
+    family: 'Poppins';    
+    weight: 700;
+  }
+}
