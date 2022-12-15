@@ -1,0 +1,33 @@
+.footer {
+  margin: 0 auto;
+  padding: 0 45px;
+  display: flex;
+  height: 130px;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1260px;
+  background: $color-white;
+}
+
+.footer__authors-container {
+  display: flex;
+  flex-direction: column;
+  a {
+    @include fontPoppinsMedium;
+    text-decoration: none;
+    font-size: 1rem;
+    color: $color-black-headers;
+    &:hover {
+      color: rgb(71, 71, 71);
+    }
+  }
+}
+
+.footer-year {
+  @include fontPoppinsBold;
+  font-size: 2rem;
+}
+
+.footer-course {
+  width: 100px;
+}
