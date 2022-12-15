@@ -16,20 +16,37 @@ export function createHeader(): HTMLElement {
 
   const searchButton = document.createElement('button');
   searchButton.classList.add('search-container__button');
-  const searchButtonSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  searchButtonSvg.innerHTML = '<use xlink:href="../../assets/svg/sprite.svg#glass"></use>';
-  searchButtonSvg.classList.add('icon-svg', 'glass-svg');
-  searchButton.append(searchButtonSvg);
+
   searchContainer.append(searchInput, searchButton);
 
-  const basketButton = document.createElement('button');
-  basketButton.classList.add('header__basket-button');
-  const basketButtonSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  basketButtonSvg.classList.add('icon-svg', 'basket-svg');
-  basketButtonSvg.innerHTML = '<use xlink:href="./../assets/svg/sprite.svg##basket"></use>';
-  basketButton.append(basketButtonSvg);
+  const cashContainer = document.createElement('div');
+  cashContainer.classList.add('header__cash-container');
+  const cashSpanContainer = document.createElement('div');
+  cashSpanContainer.classList.add('cash-container__span-container');
 
-  header.append(logo, searchContainer, basketButton);
+  const spanTotal = document.createElement('span');
+  spanTotal.classList.add('span-container__span', 'span-total');
+  spanTotal.textContent = 'Card total:';
+
+  const spanSum = document.createElement('span');
+  spanSum.classList.add('span-container__span', 'span-sum');
+  spanSum.textContent = '€300.00';
+
+  const basketContainer = document.createElement('div');
+  basketContainer.classList.add('header__basket-container');
+
+  const totalCount = document.createElement('div');
+  totalCount.classList.add('basket-container__total');
+  totalCount.textContent = '0';
+  const basketButton = document.createElement('button');
+  basketButton.classList.add('basket-container__basket-button');
+
+  basketContainer.append(totalCount, basketButton);
+  cashSpanContainer.append(spanTotal, spanSum);
+
+  cashContainer.append(cashSpanContainer, basketContainer);
+
+  header.append(logo, searchContainer, cashContainer);
 
   return header;
 }
