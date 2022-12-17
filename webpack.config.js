@@ -19,7 +19,7 @@ const config = {
   },
   devServer: {
     open: {
-      app: 'chrome'
+      app: 'chrome',
     },
     host: 'localhost',
     historyApiFallback: true,

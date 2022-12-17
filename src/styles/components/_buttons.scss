@@ -1,0 +1,32 @@
+.primary-button {
+  @include fontPoppinsBold;
+  background-color: $color-c2a;
+  border: 2px solid $color-c2b;
+  font-size: 15px;
+  border-radius: 12px;
+  color: white;
+  padding: 0 12px;
+  height: 40px;
+  cursor: pointer;
+  &:hover {
+    filter: brightness(0.95);
+  }
+  &:disabled {
+    filter: grayscale(1);
+  }
+}
+
+.secondary-button {
+  @include fontPoppinsSemiBold;
+  background-color: $color-c1f;
+  border: 2px solid $color-c1b;
+  font-size: 14px;
+  border-radius: 12px;
+  color: $color-c1a;
+  padding: 0 12px;
+  height: 40px;
+  cursor: pointer;
+  &:hover {
+    filter: brightness(0.95);
+  }
+}
