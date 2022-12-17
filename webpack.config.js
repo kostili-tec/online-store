@@ -14,6 +14,7 @@ const config = {
   entry: './src/scripts/index.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
     clean: true,
   },
   devServer: {
@@ -21,6 +22,7 @@ const config = {
       app: 'chrome'
     },
     host: 'localhost',
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
