@@ -18,7 +18,9 @@ const config = {
     clean: true,
   },
   devServer: {
-    open: true,
+    open: {
+      app: 'chrome'
+    },
     host: 'localhost',
     historyApiFallback: true,
   },
