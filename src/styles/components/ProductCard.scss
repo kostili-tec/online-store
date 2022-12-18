@@ -26,14 +26,9 @@
     }
   }
   &__discount {
-    @include fontPoppinsSemiBold;
     position: absolute;
     top: 30px;
     left: 30px;
-    background-color: $color-c2e;
-    color: $color-c2a;
-    padding: 0px 8px;
-    border-radius: 12px;
   }
   &__image {
     border-radius: 12px;

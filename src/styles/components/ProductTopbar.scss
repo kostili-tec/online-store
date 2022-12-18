@@ -1,0 +1,51 @@
+.products-topbar {
+  @include fontOpenSans;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  &__sort {
+    padding: 6px;
+    border: 1px solid $color-c1d;
+    border-radius: 12px;
+    background-color: $color-c1h;
+  }
+  &__view {
+    display: flex;
+    gap: 24px;
+  }
+}
+
+.topbar-view-option {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  &::before {
+    display: block;
+    width: 16px;
+    height: 16px;
+    content: '';
+    cursor: pointer;
+    background-color: $color-c1c;
+  }
+  &:checked::before {
+    background-color: $color-c2a;
+  }
+  &:checked::after {
+    color: $color-c1a;
+  }
+  &::after {
+    content: attr(value) ' view';
+    text-transform: capitalize;
+    color: $color-c1c;
+    cursor: pointer;
+  }
+  &.grid::before {
+    mask-image: url(../assets/svg/grid-view.svg);
+    -webkit-mask-image: url(../assets/svg/grid-view.svg);
+  }
+  &.list::before {
+    mask-image: url(../assets/svg/list-view.svg);
+    -webkit-mask-image: url(../assets/svg/list-view.svg);
+  }
+}
