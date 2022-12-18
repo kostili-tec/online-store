@@ -1,0 +1,7 @@
+.count-tag {
+    @include fontPoppinsSemiBold;
+    background-color: $color-c2e;
+    color: $color-c2a;
+    padding: 0px 8px;
+    border-radius: 12px;
+}
