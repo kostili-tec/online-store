@@ -3,35 +3,44 @@ import { getProducts, IProducts, IProduct, searchableParams } from '../testApi';
 import { createFilters } from '../components/filters';
 import { ProductCard } from '../components/ProductCard';
 import { ProductsTopbar } from '../components/ProductsTopbar';
-import { onFilteredProducts } from '../events';
+import { onFilteredProducts, onPageReload, onQueryChange } from '../events';
 
 export async function Home(container: HTMLElement, query: Partial<IQueryParameters>) {
-  const data: IProducts = await getProducts();
-  if (!data.products) {
+  const data: IProducts | null = await getProducts();
+  if (!data?.products) {
     console.log('shit no products');
     return;
   }
+  const leftFilters = createFilters(data);
+
   const mainSection = document.createElement('div');
   mainSection.className = 'home-page__main';
 
+  const topbar = ProductsTopbar(query);
+
   const productsContainer = document.createElement('div');
   productsContainer.className = 'products-container';
-  const filteredProducts = filterAndSort(data.products, query);
-  onFilteredProducts.emit(filteredProducts);
 
-  productsContainer.replaceChildren(
-    ...filteredProducts.map((product) => ProductCard(product, !query.view || query.view === 'grid')),
-  );
-
-  const topbar = ProductsTopbar();
+  const unsubscribeProducts = onQueryChange.subscribe((query) => {
+    updateProducts(productsContainer, data.products, query);
+  });
+  onPageReload.subscribe(unsubscribeProducts, true);
+  updateProducts(productsContainer, data.products, query);
 
   mainSection.append(topbar, productsContainer);
-  const leftFilters = createFilters(data);
 
   const div = document.createElement('div');
-  div.style.display = 'flex';
+  div.className = 'home-page';
   div.append(leftFilters, mainSection);
   container.replaceChildren(div);
+}
+
+function updateProducts(container: HTMLElement, products: IProduct[], query: Partial<IQueryParameters>) {
+  const filteredProducts = filterAndSort(products, query);
+  onFilteredProducts.emit(filteredProducts);
+  container.replaceChildren(
+    ...filteredProducts.map((product) => ProductCard(product, !query.view || query.view === 'grid')),
+  );
 }
 
 function filterAndSort(products: IProduct[], query: Partial<IQueryParameters>): IProduct[] {

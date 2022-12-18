@@ -20,7 +20,7 @@ export interface IProduct {
 }
 
 export interface IProducts {
-  products?: IProduct[];
+  products: IProduct[];
 }
 
 export async function getProducts() {
@@ -29,6 +29,6 @@ export async function getProducts() {
     const data: IProducts = await res.json();
     return data;
   } catch {
-    return {};
+    return null;
   }
 }

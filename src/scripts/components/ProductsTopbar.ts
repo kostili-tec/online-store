@@ -1,6 +1,7 @@
-import { IQueryParameters } from '../router';
+import { onFilteredProducts, onPageReload } from '../events';
+import { IQueryParameters, updateQueryParams } from '../router';
 
-export function ProductsTopbar(): HTMLElement {
+export function ProductsTopbar(query: Partial<IQueryParameters>): HTMLElement {
   const container = document.createElement('div');
   container.className = 'products-topbar';
 
@@ -19,6 +20,11 @@ export function ProductsTopbar(): HTMLElement {
     sortOption.value = option.val;
     select.append(sortOption);
   });
+  select.oninput = (e) => {
+    const input = e.target as HTMLSelectElement;
+    query.sort = input.value;
+    updateQueryParams(query);
+  };
 
   const viewContainer = document.createElement('div');
   viewContainer.className = 'products-topbar__view';
@@ -35,11 +41,20 @@ export function ProductsTopbar(): HTMLElement {
   listView.value = 'list';
   listView.className = 'topbar-view-option list';
 
+  viewContainer.oninput = (e) => {
+    const input = e.target as HTMLInputElement;
+    query.view = input.value;
+    updateQueryParams(query);
+  };
+
   const productCount = document.createElement('div');
   const tag = document.createElement('span');
   tag.style.marginRight = '4px';
   tag.className = 'count-tag';
-  tag.textContent = '100';
+  const unsubscribeTag = onFilteredProducts.subscribe((products) => {
+    tag.textContent = products.length.toString();
+  });
+  onPageReload.subscribe(unsubscribeTag, true);
   productCount.append(tag, 'Products');
 
   viewContainer.append(gridview, listView, productCount);

@@ -2,6 +2,7 @@ import { Page404 } from './pages/Page404';
 import { Home } from './pages/Home';
 import { ProductDetails } from './pages/ProductDetails';
 import { Cart } from './pages/Cart';
+import { onPageReload, onQueryChange } from './events';
 
 export const root = document.createElement('main');
 root.className = 'main';
@@ -14,7 +15,7 @@ export interface IQueryParameters {
   search: string;
   price: string;
   stock: string;
-  view: 'grid' | 'list';
+  view: string;
 }
 interface IRoutes {
   [key: string]: {
@@ -46,6 +47,7 @@ export const updateQueryParams = (query: Partial<IQueryParameters>) => {
   const path = window.location.pathname;
   const queryString = new URLSearchParams(query).toString();
   window.history.pushState({}, '', `${path}?${queryString}`);
+  onQueryChange.emit(query);
 };
 
 export const navigate = (href: string, e?: Event) => {
@@ -58,6 +60,7 @@ const handleLocation = () => {
   const path = window.location.pathname;
   const query = new URLSearchParams(window.location.search);
   const route = routes[path] || routes['page404'];
+  onPageReload.emit(route.name);
   route.page(root, Object.fromEntries(query));
   document.title = `Online Store - ${route.name}`;
 };
