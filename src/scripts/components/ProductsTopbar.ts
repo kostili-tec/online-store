@@ -11,8 +11,8 @@ export function ProductsTopbar(): HTMLElement {
     { name: 'Sort by rating ↑', val: 'rating-asc' },
     { name: 'Sort by price ↓', val: 'price-desc' },
     { name: 'Sort by price ↑', val: 'price-asc' },
-    { name: 'Sort by discount ↓', val: 'discountPercentage-desc' },
-    { name: 'Sort by discount ↑', val: 'discountPercentage-asc' },
+    { name: 'Sort by discount ↓', val: 'discount-desc' },
+    { name: 'Sort by discount ↑', val: 'discount-asc' },
   ].forEach((option) => {
     const sortOption = document.createElement('option');
     sortOption.textContent = option.name;

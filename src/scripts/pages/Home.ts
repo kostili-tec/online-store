@@ -3,6 +3,7 @@ import { getProducts, IProducts, IProduct, searchableParams } from '../testApi';
 import { createFilters } from '../components/filters';
 import { ProductCard } from '../components/ProductCard';
 import { ProductsTopbar } from '../components/ProductsTopbar';
+import { onFilteredProducts } from '../events';
 
 export async function Home(container: HTMLElement, query: Partial<IQueryParameters>) {
   const data: IProducts = await getProducts();
@@ -16,6 +17,8 @@ export async function Home(container: HTMLElement, query: Partial<IQueryParamete
   const productsContainer = document.createElement('div');
   productsContainer.className = 'products-container';
   const filteredProducts = filterAndSort(data.products, query);
+  onFilteredProducts.emit(filteredProducts);
+
   productsContainer.replaceChildren(
     ...filteredProducts.map((product) => ProductCard(product, !query.view || query.view === 'grid')),
   );
@@ -59,8 +62,11 @@ function filterAndSort(products: IProduct[], query: Partial<IQueryParameters>): 
     .sort((a, b) => {
       const sortParam = query.sort ? query.sort : 'rating-desc';
       const [key, comparator] = sortParam.split('-');
-      //if (comparator === 'asc') return a[key] - b[key];
-      //else if (comparator === 'desc') return b[key] - a[key];
-      return 0;
+      let comparison = 0;
+      if (key === 'rating') comparison = a.rating - b.rating;
+      if (key === 'price') comparison = a.price - b.price;
+      if (key === 'discount') comparison = a.discountPercentage - b.discountPercentage;
+      if (comparator === 'desc') comparison = -comparison;
+      return comparison;
     });
 }
