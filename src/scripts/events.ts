@@ -26,6 +26,6 @@ class EventManager<DataType> {
   }
 }
 
-export const onQueryChange = new EventManager<IQueryParameters>();
+export const onQueryChange = new EventManager<Partial<IQueryParameters>>();
 export const onFilteredProducts = new EventManager<IProduct[]>();
 export const onPageReload = new EventManager<string>();

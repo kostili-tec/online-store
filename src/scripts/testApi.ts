@@ -1,13 +1,20 @@
+export enum searchableParams {
+  category = 'category',
+  brand = 'brand',
+  title = 'title',
+  description = 'description',
+}
+
 export interface IProduct {
   id: number;
-  title: string;
-  description: string;
+  [searchableParams.title]: string;
+  [searchableParams.description]: string;
   price: number;
   discountPercentage: number;
   rating: number;
   stock: number;
-  brand: string;
-  category: string;
+  [searchableParams.brand]: string;
+  [searchableParams.category]: string;
   thumbnail: string;
   images: string[];
 }

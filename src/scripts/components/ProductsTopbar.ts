@@ -1,7 +1,6 @@
 import { IQueryParameters } from '../router';
 
-export function ProductsTopbar(query: IQueryParameters): HTMLElement {
-  console.log(query);
+export function ProductsTopbar(): HTMLElement {
   const container = document.createElement('div');
   container.className = 'products-topbar';
 
@@ -12,8 +11,8 @@ export function ProductsTopbar(query: IQueryParameters): HTMLElement {
     { name: 'Sort by rating ↑', val: 'rating-asc' },
     { name: 'Sort by price ↓', val: 'price-desc' },
     { name: 'Sort by price ↑', val: 'price-asc' },
-    { name: 'Sort by discount ↓', val: 'discount-desc' },
-    { name: 'Sort by discount ↑', val: 'discount-asc' },
+    { name: 'Sort by discount ↓', val: 'discountPercentage-desc' },
+    { name: 'Sort by discount ↑', val: 'discountPercentage-asc' },
   ].forEach((option) => {
     const sortOption = document.createElement('option');
     sortOption.textContent = option.name;

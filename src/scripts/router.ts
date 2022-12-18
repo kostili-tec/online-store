@@ -7,12 +7,19 @@ export const root = document.createElement('main');
 root.className = 'main';
 
 export interface IQueryParameters {
-  [key: string]: string;
+  id: string;
+  category: string;
+  brand: string;
+  sort: string;
+  search: string;
+  price: string;
+  stock: string;
+  view: 'grid' | 'list';
 }
 interface IRoutes {
   [key: string]: {
     name: string;
-    page: (container: HTMLElement, params: IQueryParameters) => void;
+    page: (container: HTMLElement, params: Partial<IQueryParameters>) => void;
   };
 }
 
@@ -35,7 +42,7 @@ export const routes: IRoutes = {
   },
 };
 
-export const updateQueryParams = (query: IQueryParameters) => {
+export const updateQueryParams = (query: Partial<IQueryParameters>) => {
   const path = window.location.pathname;
   const queryString = new URLSearchParams(query).toString();
   window.history.pushState({}, '', `${path}?${queryString}`);
