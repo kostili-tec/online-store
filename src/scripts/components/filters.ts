@@ -1,4 +1,3 @@
-// import noUiSlider from 'nouislider';
 import * as noUiSlider from 'nouislider';
 import 'nouislider/dist/nouislider.css';
 import { IProducts, IProduct } from '../testApi';
@@ -27,12 +26,10 @@ export function createFilters(data: IProducts) {
     brandsContainer.append(createInputCategory(el));
   });
 
-  const priceSlider = createRangeInput();
-  const headSliderPrice = document.createElement('h4');
-  headSliderPrice.textContent = 'Price';
-  priceSlider.prepend(headSliderPrice);
+  const priceSlider = createRangeInput('price', 10, 2000);
+  const stockSlider = createRangeInput('stock', 10, 150);
 
-  filtersContainer.append(headCatogory, categoriesContainer, headBrand, brandsContainer, priceSlider);
+  filtersContainer.append(headCatogory, categoriesContainer, headBrand, brandsContainer, priceSlider, stockSlider);
   return filtersContainer;
 }
 
@@ -51,7 +48,7 @@ function createInputCategory(name: string): HTMLDivElement {
   spanCheckBox.classList.add('checkmark');
 
   const countSpan = document.createElement('span');
-  countSpan.classList.add('span-count');
+  countSpan.classList.add('label__span-count');
   countSpan.textContent = '(4/5)';
 
   labelForCheckBox.append(checkBox, spanCheckBox);
@@ -60,9 +57,11 @@ function createInputCategory(name: string): HTMLDivElement {
   return categoryContainer;
 }
 
-function createRangeInput(): HTMLDivElement {
+function createRangeInput(prefix: string, minValue: number, maxValue: number): HTMLDivElement {
   const inputsContainer = document.createElement('div');
   inputsContainer.classList.add('noUiSlider-container');
+  const headSlider = document.createElement('h4');
+  headSlider.textContent = `${prefix}`;
   const valuesContainer = document.createElement('div');
   valuesContainer.classList.add('noUiSlider-container__inputs');
 
@@ -78,17 +77,17 @@ function createRangeInput(): HTMLDivElement {
   const inputMax = document.createElement('input');
   inputMin.type = 'text';
   inputMax.type = 'text';
-  inputMin.id = 'slider__value-lower';
-  inputMax.id = 'slider__value-upper';
+  inputMin.id = `${prefix}-slider__value-lower`;
+  inputMax.id = `${prefix}-slider__value-upper`;
 
   inputMinContainer.append(pMin, inputMin);
   inputMaxContainer.append(pMax, inputMax);
 
   const inputsArr = [inputMin, inputMax];
-  const slider = createNoUiSlider(10, 2000, inputsArr);
+  const slider = createNoUiSlider(minValue, maxValue, inputsArr);
 
   valuesContainer.append(inputMinContainer, inputMaxContainer);
-  inputsContainer.append(slider, valuesContainer);
+  inputsContainer.append(headSlider, slider, valuesContainer);
   return inputsContainer;
 }
 
