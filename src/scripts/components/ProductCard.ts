@@ -10,7 +10,7 @@ export function ProductCard(product: IProduct, grid: boolean): HTMLElement {
   const discountPercentage = Math.round(product.discountPercentage);
   if (discountPercentage) {
     const discount = document.createElement('span');
-    discount.className = 'product-card__discount';
+    discount.className = 'product-card__discount count-tag';
     discount.textContent = ` - ${Math.round(discountPercentage)} %`;
     container.append(discount);
   }
