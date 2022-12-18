@@ -4,7 +4,7 @@ import { ProductDetails } from './pages/ProductDetails';
 import { Cart } from './pages/Cart';
 
 export const root = document.createElement('main');
-root.className = 'container';
+root.className = 'main';
 
 export interface IQueryParameters {
   [key: string]: string;

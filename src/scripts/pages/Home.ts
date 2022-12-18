@@ -1,5 +1,12 @@
+import { getProducts, IProducts } from '../testApi';
+import { createFilters } from '../components/filters';
+
 export async function Home(container: HTMLElement) {
-  const div = document.createElement('div');
-  div.textContent = 'This is homepage!';
-  container.replaceChildren(div);
+  const data: IProducts = await getProducts();
+  if (!data.products) {
+    console.log('shit no products');
+    return;
+  }
+  const leftFilters = createFilters(data);
+  container.replaceChildren(leftFilters);
 }
