@@ -1,0 +1,39 @@
+.product-details__container {
+  display: flex;
+  gap: 2rem;
+}
+
+.details__img-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 2rem;
+  padding: 1rem;
+  position: relative;
+  img {
+    max-width: 100%;
+    border-radius: 12px;
+  }
+}
+
+.img-container__discount {
+  @include fontPoppinsBold;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 16px;
+  background-color: #F4F8EC;
+  color: #6A983C;
+  transform: translate(26px, 20px);
+}
+
+.details__info-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1rem;
+ 
+}
