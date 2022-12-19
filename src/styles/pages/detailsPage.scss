@@ -1,3 +1,27 @@
+.product-details__navigation {
+  @include fontOpenSans;
+  font-size: 12px;
+  line-height: 16px;
+  display: flex;
+  gap: 8px;
+  a {
+    color: $color-c1c;
+    text-decoration: none;
+    cursor: pointer;
+    transition: ease-in 0.2s;
+    &:last-child{
+      cursor: auto;
+      color: $color-black-headers;
+    }
+    &::first-letter{
+      text-transform: uppercase;
+    }
+    &:hover {
+      color: $color-black-headers;
+    }
+  }
+}
+
 .product-details__container {
   display: flex;
   gap: 2rem;

@@ -1,13 +1,9 @@
-import { IQueryParameters } from '../router';
+import { IQueryParameters, navigate } from '../router';
 import { getProducts, IProducts, IProduct } from '../testApi';
 
 export async function ProductDetails(container: HTMLElement, product: IQueryParameters) {
-  const div = document.createElement('div');
-  div.textContent = `This is product info for ${product.id}`;
-
   const productEl = await manageProductDetails(Number(product.id));
-
-  container.replaceChildren(productEl);
+  container.replaceChildren(...productEl);
 }
 
 async function manageProductDetails(id: number) {
@@ -17,8 +13,37 @@ async function manageProductDetails(id: number) {
   const product = findProduct(data, id);
   if (!product) throw new Error('product is not exist'); // переделать
   const productContainer = createProductDetails(product);
-  console.log(product);
-  return productContainer;
+  const navigation = createNavigation(product);
+  return [navigation, productContainer];
+}
+
+function createNavigation(product: IProduct) {
+  const navigation = document.createElement('div');
+  navigation.classList.add('product-details__navigation');
+
+  const homeLink = document.createElement('a');
+  homeLink.textContent = 'home';
+  homeLink.href = '/';
+  homeLink.addEventListener('click', (e) => navigate('/?', e));
+  const categoryLink = document.createElement('a');
+  categoryLink.textContent = product.category;
+  categoryLink.addEventListener('click', (e) => navigate(`/?category=${product.category}`, e));
+  const brandLink = document.createElement('a');
+  brandLink.textContent = product.brand;
+  brandLink.addEventListener('click', (e) => navigate(`/?brand=${product.brand}`, e));
+  const titleLink = document.createElement('a');
+  titleLink.textContent = product.title;
+
+  const navArr = [homeLink, categoryLink, brandLink, titleLink];
+  navArr.forEach((el, ind) => {
+    navigation.append(el);
+    if (ind !== navArr.length - 1) {
+      const slash = document.createElement('span');
+      slash.textContent = '/';
+      navigation.append(slash);
+    }
+  });
+  return navigation;
 }
 
 function createProductDetails(product: IProduct) {
