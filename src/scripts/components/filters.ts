@@ -28,8 +28,8 @@ export function createFilters(products: IProduct[], query: Partial<IQueryParamet
     brandsContainer.append(createInputCategory(el, 'brand', query));
   });
 
-  const priceSlider = createRangeInput('price', 10, 2000);
-  const stockSlider = createRangeInput('stock', 10, 150);
+  const priceSlider = createRangeInput('price', 10, 2000, query);
+  const stockSlider = createRangeInput('stock', 10, 150, query);
 
   filtersContainer.append(headCatogory, categoriesContainer, headBrand, brandsContainer, priceSlider, stockSlider);
   return filtersContainer;
@@ -86,11 +86,16 @@ function createInputCategory(
   return categoryContainer;
 }
 
-function createRangeInput(prefix: string, minValue: number, maxValue: number): HTMLDivElement {
+function createRangeInput(
+  rangeName: keyof IQueryParameters,
+  minValue: number,
+  maxValue: number,
+  query: Partial<IQueryParameters>,
+): HTMLDivElement {
   const inputsContainer = document.createElement('div');
   inputsContainer.classList.add('noUiSlider-container');
   const headSlider = document.createElement('h4');
-  headSlider.textContent = `${prefix}`;
+  headSlider.textContent = `${rangeName}`;
   const valuesContainer = document.createElement('div');
   valuesContainer.classList.add('noUiSlider-container__inputs');
 
@@ -106,21 +111,27 @@ function createRangeInput(prefix: string, minValue: number, maxValue: number): H
   const inputMax = document.createElement('input');
   inputMin.type = 'text';
   inputMax.type = 'text';
-  inputMin.id = `${prefix}-slider__value-lower`;
-  inputMax.id = `${prefix}-slider__value-upper`;
+  inputMin.id = `${rangeName}-slider__value-lower`;
+  inputMax.id = `${rangeName}-slider__value-upper`;
 
   inputMinContainer.append(pMin, inputMin);
   inputMaxContainer.append(pMax, inputMax);
 
   const inputsArr = [inputMin, inputMax];
-  const slider = createNoUiSlider(minValue, maxValue, inputsArr);
+  const slider = createNoUiSlider(rangeName, minValue, maxValue, inputsArr, query);
 
   valuesContainer.append(inputMinContainer, inputMaxContainer);
   inputsContainer.append(headSlider, slider, valuesContainer);
   return inputsContainer;
 }
 
-function createNoUiSlider(minRange: number, maxRange: number, inputs: Array<HTMLInputElement>) {
+function createNoUiSlider(
+  rangeName: keyof IQueryParameters,
+  minRange: number,
+  maxRange: number,
+  inputs: Array<HTMLInputElement>,
+  query: Partial<IQueryParameters>,
+) {
   const snapSlider = document.createElement('div');
   snapSlider.id = 'priceSlider';
   noUiSlider.cssClasses.target += ' range-slider';
@@ -136,6 +147,14 @@ function createNoUiSlider(minRange: number, maxRange: number, inputs: Array<HTML
   (snapSlider as noUiSlider.target).noUiSlider?.on('update', (values, handle) => {
     const roundVal = Math.round(Number(values[handle])).toString();
     inputs[handle].value = roundVal;
+  });
+
+  (snapSlider as noUiSlider.target).noUiSlider?.on('change', (values, handle) => {
+    const roundVal = Math.round(Number(values[handle])).toString();
+    const rangeValues = query[rangeName]?.split(',') ?? [minRange, maxRange];
+    rangeValues[handle] = roundVal;
+    query[rangeName] = rangeValues.join(',');
+    updateQueryParams(query);
   });
 
   return snapSlider;
