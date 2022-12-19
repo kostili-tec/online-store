@@ -12,6 +12,7 @@
   position: relative;
   img {
     max-width: 100%;
+    min-width: 130px;
     border-radius: 12px;
   }
 }
@@ -31,9 +32,69 @@
 }
 
 .details__info-container {
+  @include fontOpenSans;
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 1rem;
- 
+  padding: 1rem; 
+  color: $color-black-headers;
+}
+
+.info-container {
+  &__title-h2 {
+    @include fontPoppinsSemiBold;
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  &__rating{
+    margin-top: 0;
+    margin-bottom: 23px;
+  }
+  &__description {
+    font-size: 17px;
+  }
+  &__spec-container{
+    display: flex;
+    margin-bottom: 1rem;
+    .spec-container__title {
+      width: 100px;
+      color: $color-c1c;
+    }
+    .spec-container__value {
+      &::first-letter {
+        text-transform: uppercase;
+      }
+    } 
+  }
+  &__buy-container{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 24px 20px 16px;
+    position: relative;
+    .buy-container__buttons-container {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+    }
+  }
+}
+
+.prices-container__discount {
+  color: $color-c2a;
+}
+.prices-container__original {
+  @include fontPoppinsSemiBold;
+  color: $color-c1c;
+  font-size: 12px;
+}
+.buttons-container__button {
+  font-size: 15px;
+  line-height: 22px;
+  width: 140px;
+  height: 47px;
+  padding: 12px 16px;
+  gap: 24px;  
+  border: 2px solid #46760A;
+  border-radius: 12px;
+  cursor: pointer;
 }
