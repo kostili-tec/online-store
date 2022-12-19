@@ -3,7 +3,7 @@ import { getProducts, IProducts, IProduct, searchableParams } from '../testApi';
 import { createFilters } from '../components/filters';
 import { ProductCard } from '../components/ProductCard';
 import { ProductsTopbar } from '../components/ProductsTopbar';
-import { onFilteredProducts, onPageReload, onQueryChange } from '../events';
+import { onFilteredProducts, onQueryChange, untilReload } from '../events';
 
 export async function Home(container: HTMLElement, query: Partial<IQueryParameters>) {
   const data: IProducts | null = await getProducts();
@@ -11,20 +11,21 @@ export async function Home(container: HTMLElement, query: Partial<IQueryParamete
     console.log('shit no products');
     return;
   }
-  const leftFilters = createFilters(data.products, query);
+  const leftFilters = createFilters(data.products);
 
   const mainSection = document.createElement('div');
   mainSection.className = 'home-page__main';
 
-  const topbar = ProductsTopbar(query);
+  const topbar = ProductsTopbar();
 
   const productsContainer = document.createElement('div');
   productsContainer.className = 'products-container';
 
-  const unsubscribeProducts = onQueryChange.subscribe((query) => {
-    updateProducts(productsContainer, data.products, query);
-  });
-  onPageReload.subscribe(unsubscribeProducts, true);
+  untilReload(
+    onQueryChange.subscribe((query) => {
+      updateProducts(productsContainer, data.products, query);
+    }),
+  );
   updateProducts(productsContainer, data.products, query);
 
   mainSection.append(topbar, productsContainer);
@@ -62,7 +63,7 @@ function filterAndSort(products: IProduct[], query: Partial<IQueryParameters>): 
       }
       if (query.search) {
         return Object.values(searchableParams).reduce(
-          (tally, key) => tally || product[key].includes(query.search as string),
+          (tally, key) => tally || product[key].toLowerCase().includes(query.search?.toLowerCase() ?? ''),
           false,
         );
       }

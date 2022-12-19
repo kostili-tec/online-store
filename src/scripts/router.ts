@@ -43,12 +43,52 @@ export const routes: IRoutes = {
   },
 };
 
-export const updateQueryParams = (query: Partial<IQueryParameters>) => {
-  const path = window.location.pathname;
-  const queryString = new URLSearchParams(query).toString();
-  window.history.pushState({}, '', `${path}?${queryString}`);
-  onQueryChange.emit(query);
-};
+class SearchParams {
+  private updateHistory(query: URLSearchParams) {
+    const path = window.location.pathname;
+    const params = query.toString();
+    window.history.pushState(path, '', `${path}${params && '?'}${params}`);
+    onQueryChange.emit(Object.fromEntries(query));
+  }
+  public set(param: keyof IQueryParameters, value: string): void {
+    const query = new URLSearchParams(window.location.search);
+    query.set(param, value);
+    this.updateHistory(query);
+  }
+  public append(param: keyof IQueryParameters, value: string): void {
+    const query = new URLSearchParams(window.location.search);
+    const items = query.get(param)?.split(',') ?? [];
+    if (!items.includes(value)) {
+      query.set(param, [...items, value].join(','));
+      this.updateHistory(query);
+    }
+  }
+  public delete(param: keyof IQueryParameters, value = ''): void {
+    const query = new URLSearchParams(window.location.search);
+    if (!value) {
+      query.delete(param);
+    } else {
+      const items =
+        query
+          .get(param)
+          ?.split(',')
+          .filter((el) => el !== value) ?? [];
+      if (items.length > 0) query.set(param, items.join(','));
+      else query.delete(param);
+    }
+    this.updateHistory(query);
+  }
+  public get(param: keyof IQueryParameters): string {
+    const query = new URLSearchParams(window.location.search);
+    return query.get(param) ?? '';
+  }
+  public split(param: keyof IQueryParameters): string[] | undefined {
+    const query = new URLSearchParams(window.location.search);
+    return query.get(param)?.split(',');
+  }
+}
+
+export const queryParams = new SearchParams();
 
 export const navigate = (href: string, e?: Event) => {
   if (e instanceof Event) e.preventDefault();
