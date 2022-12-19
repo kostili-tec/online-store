@@ -1,19 +1,26 @@
+export enum searchableParams {
+  category = 'category',
+  brand = 'brand',
+  title = 'title',
+  description = 'description',
+}
+
 export interface IProduct {
   id: number;
-  title: string;
-  description: string;
+  [searchableParams.title]: string;
+  [searchableParams.description]: string;
   price: number;
   discountPercentage: number;
   rating: number;
   stock: number;
-  brand: string;
-  category: string;
+  [searchableParams.brand]: string;
+  [searchableParams.category]: string;
   thumbnail: string;
   images: string[];
 }
 
 export interface IProducts {
-  products?: IProduct[];
+  products: IProduct[];
 }
 
 export async function getProducts() {
@@ -22,6 +29,6 @@ export async function getProducts() {
     const data: IProducts = await res.json();
     return data;
   } catch {
-    return {};
+    return null;
   }
 }

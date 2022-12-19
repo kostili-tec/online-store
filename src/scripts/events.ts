@@ -1,7 +1,7 @@
 import { IQueryParameters } from './router';
 import { IProduct } from './testApi';
 
-type TCallback<DataType> = (data?: DataType) => void;
+type TCallback<DataType> = (data: DataType) => void;
 
 interface IListner<DataType> {
   callback: TCallback<DataType>;
@@ -11,7 +11,7 @@ interface IListner<DataType> {
 class EventManager<DataType> {
   private listners: IListner<DataType>[] = [];
 
-  public emit(data?: DataType) {
+  public emit(data: DataType) {
     this.listners = this.listners.filter((listner) => {
       listner.callback(data);
       return !listner.once;
@@ -26,6 +26,6 @@ class EventManager<DataType> {
   }
 }
 
-export const onQueryChange = new EventManager<IQueryParameters>();
+export const onQueryChange = new EventManager<Partial<IQueryParameters>>();
 export const onFilteredProducts = new EventManager<IProduct[]>();
 export const onPageReload = new EventManager<string>();
