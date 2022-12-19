@@ -122,3 +122,29 @@
   border-radius: 12px;
   cursor: pointer;
 }
+
+.product-details__null {
+  @include fontPoppinsBold;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  min-height: 73vh;
+  
+  a {
+    transition: ease-in 0.2s;
+    outline: none;
+    &:link {
+      color: $color-c2a;
+      text-decoration: none;
+    }
+    &:visited {
+      color: $color-c2a;
+    }
+    &:hover {
+      transform: scale(1.1);
+      color: $color-c2b;
+    }
+  }
+}
