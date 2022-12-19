@@ -19,6 +19,7 @@
     .product-card__options {
       flex-direction: row;
       align-items: center;
+      gap: 0;
     }
     .product-card__image {
       width: 100%;
@@ -33,6 +34,7 @@
   &__image {
     border-radius: 12px;
     height: 150px;
+    width: 220px;
     object-fit: cover;
     cursor: pointer;
   }
@@ -50,7 +52,7 @@
   &__title {
     @include fontPoppinsBold;
     font-size: 1.25em;
-    margin: 16px 0 4px;
+    margin: 10px 0 4px;
     cursor: pointer;
   }
   &__desc {
