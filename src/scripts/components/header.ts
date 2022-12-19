@@ -1,3 +1,5 @@
+import { queryParams } from '../router';
+
 export function createHeader(): HTMLElement {
   const header = document.createElement('header');
   header.classList.add('header');
@@ -13,9 +15,13 @@ export function createHeader(): HTMLElement {
   searchInput.classList.add('search-container__input');
   searchInput.type = 'text';
   searchInput.placeholder = 'Search Products, categories ...';
+  searchInput.onchange = () => {
+    queryParams.set('search', searchInput.value);
+  };
 
   const searchButton = document.createElement('button');
   searchButton.classList.add('search-container__button');
+  searchButton.onclick = searchInput.onchange;
 
   searchContainer.append(searchInput, searchButton);
 

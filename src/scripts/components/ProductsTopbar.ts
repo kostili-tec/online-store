@@ -1,7 +1,7 @@
-import { onFilteredProducts, onPageReload } from '../events';
-import { IQueryParameters, updateQueryParams } from '../router';
+import { onFilteredProducts, untilReload } from '../events';
+import { queryParams } from '../router';
 
-export function ProductsTopbar(query: Partial<IQueryParameters>): HTMLElement {
+export function ProductsTopbar(): HTMLElement {
   const container = document.createElement('div');
   container.className = 'products-topbar';
 
@@ -18,13 +18,12 @@ export function ProductsTopbar(query: Partial<IQueryParameters>): HTMLElement {
     const sortOption = document.createElement('option');
     sortOption.textContent = option.name;
     sortOption.value = option.val;
-    if (option.val === query.sort) sortOption.selected = true;
+    if (option.val === queryParams.get('sort')) sortOption.selected = true;
     select.append(sortOption);
   });
   select.oninput = (e) => {
-    const input = e.target as HTMLSelectElement;
-    query.sort = input.value;
-    updateQueryParams(query);
+    const target = e.target as HTMLSelectElement;
+    queryParams.set('sort', target.value);
   };
 
   const viewContainer = document.createElement('div');
@@ -35,28 +34,25 @@ export function ProductsTopbar(query: Partial<IQueryParameters>): HTMLElement {
   gridview.name = 'view-picker';
   gridview.value = 'grid';
   gridview.className = 'topbar-view-option grid';
+  gridview.oninput = () => queryParams.set('view', 'grid');
   const listView = document.createElement('input');
   listView.type = 'radio';
   listView.name = 'view-picker';
   listView.value = 'list';
   listView.className = 'topbar-view-option list';
-  if (query.view === 'list') listView.checked = true;
+  listView.oninput = () => queryParams.set('view', 'list');
+  if (queryParams.get('view') === 'list') listView.checked = true;
   else gridview.checked = true;
-
-  viewContainer.oninput = (e) => {
-    const input = e.target as HTMLInputElement;
-    query.view = input.value;
-    updateQueryParams(query);
-  };
 
   const productCount = document.createElement('div');
   const tag = document.createElement('span');
   tag.style.marginRight = '4px';
   tag.className = 'count-tag';
-  const unsubscribeTag = onFilteredProducts.subscribe((products) => {
-    tag.textContent = products.length.toString();
-  });
-  onPageReload.subscribe(unsubscribeTag, true);
+  untilReload(
+    onFilteredProducts.subscribe((products) => {
+      tag.textContent = products.length.toString();
+    }),
+  );
   productCount.append(tag, 'Products');
 
   viewContainer.append(gridview, listView, productCount);

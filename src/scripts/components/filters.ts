@@ -1,10 +1,10 @@
 import * as noUiSlider from 'nouislider';
 import 'nouislider/dist/nouislider.css';
 import { IProduct } from '../testApi';
-import { IQueryParameters, updateQueryParams } from '../router';
-import { onFilteredProducts, onPageReload } from '../events';
+import { IQueryParameters, queryParams } from '../router';
+import { onFilteredProducts, untilReload } from '../events';
 
-export function createFilters(products: IProduct[], query: Partial<IQueryParameters>) {
+export function createFilters(products: IProduct[]) {
   const filtersContainer = document.createElement('div');
   filtersContainer.classList.add('filters-container');
 
@@ -15,7 +15,7 @@ export function createFilters(products: IProduct[], query: Partial<IQueryParamet
   headCatogory.textContent = 'Categories';
 
   getCategories(products, 'category').forEach((el) => {
-    categoriesContainer.append(createInputCategory(el, 'category', query));
+    categoriesContainer.append(createInputCategory(el, 'category'));
   });
 
   const headBrand = document.createElement('h4');
@@ -25,28 +25,24 @@ export function createFilters(products: IProduct[], query: Partial<IQueryParamet
   brandsContainer.classList.add('filters__brands-container');
 
   getCategories(products, 'brand').forEach((el) => {
-    brandsContainer.append(createInputCategory(el, 'brand', query));
+    brandsContainer.append(createInputCategory(el, 'brand'));
   });
 
-  const priceSlider = createRangeInput('price', 10, 2000, query);
-  const stockSlider = createRangeInput('stock', 10, 150, query);
+  const priceSlider = createRangeInput('price', getMinValue('price', products), getMaxValue('price', products));
+  const stockSlider = createRangeInput('stock', getMinValue('stock', products), getMaxValue('stock', products));
 
   filtersContainer.append(headCatogory, categoriesContainer, headBrand, brandsContainer, priceSlider, stockSlider);
   return filtersContainer;
 }
 
-function createInputCategory(
-  category: ICategory,
-  key: 'brand' | 'category',
-  query: Partial<IQueryParameters>,
-): HTMLDivElement {
+function createInputCategory(category: ICategory, key: 'brand' | 'category'): HTMLDivElement {
   const categoryContainer = document.createElement('div');
   categoryContainer.classList.add('categories-item');
 
   const checkBox = document.createElement('input');
   checkBox.type = 'checkbox';
   checkBox.id = 'filter' + category.title;
-  if (query[key]?.includes(category.title)) checkBox.checked = true;
+  if (queryParams.get(key).includes(category.title)) checkBox.checked = true;
 
   const labelForCheckBox = document.createElement('label');
   labelForCheckBox.textContent = category.title;
@@ -66,32 +62,25 @@ function createInputCategory(
   categoryContainer.append(labelForCheckBox, countSpan);
 
   checkBox.oninput = () => {
-    const currentCategories = query[key]?.split(',') ?? [];
-    if (checkBox.checked) {
-      query[key] = [...currentCategories, category.title].join(',');
-    } else query[key] = currentCategories.filter((cat) => cat !== category.title).join(',');
-    updateQueryParams(query);
+    if (checkBox.checked) queryParams.append(key, category.title);
+    else queryParams.delete(key, category.title);
   };
 
-  const unsubscribe = onFilteredProducts.subscribe((products) => {
-    const count = products.reduce((sum, product) => {
-      return product[key] === category.title ? sum + 1 : sum;
-    }, 0);
-    countCurrent.textContent = count.toString();
-    if (count === 0) categoryContainer.classList.add('category-no-products');
-    else categoryContainer.classList.remove('category-no-products');
-  });
-  onPageReload.subscribe(unsubscribe, true);
+  untilReload(
+    onFilteredProducts.subscribe((products) => {
+      const count = products.reduce((sum, product) => {
+        return product[key] === category.title ? sum + 1 : sum;
+      }, 0);
+      countCurrent.textContent = count.toString();
+      if (count === 0) categoryContainer.classList.add('category-no-products');
+      else categoryContainer.classList.remove('category-no-products');
+    }),
+  );
 
   return categoryContainer;
 }
 
-function createRangeInput(
-  rangeName: keyof IQueryParameters,
-  minValue: number,
-  maxValue: number,
-  query: Partial<IQueryParameters>,
-): HTMLDivElement {
+function createRangeInput(rangeName: keyof IQueryParameters, minValue: number, maxValue: number): HTMLDivElement {
   const inputsContainer = document.createElement('div');
   inputsContainer.classList.add('noUiSlider-container');
   const headSlider = document.createElement('h4');
@@ -118,7 +107,7 @@ function createRangeInput(
   inputMaxContainer.append(pMax, inputMax);
 
   const inputsArr = [inputMin, inputMax];
-  const slider = createNoUiSlider(rangeName, minValue, maxValue, inputsArr, query);
+  const slider = createNoUiSlider(rangeName, minValue, maxValue, inputsArr);
 
   valuesContainer.append(inputMinContainer, inputMaxContainer);
   inputsContainer.append(headSlider, slider, valuesContainer);
@@ -130,18 +119,24 @@ function createNoUiSlider(
   minRange: number,
   maxRange: number,
   inputs: Array<HTMLInputElement>,
-  query: Partial<IQueryParameters>,
 ) {
   const snapSlider = document.createElement('div');
-  snapSlider.id = 'priceSlider';
+  snapSlider.id = `${rangeName}-slider`;
   noUiSlider.cssClasses.target += ' range-slider';
   noUiSlider.create(snapSlider, {
     range: {
       min: minRange,
       max: maxRange,
     },
-    start: [minRange, maxRange],
+    start: queryParams.split(rangeName) ?? [minRange, maxRange],
     connect: true,
+  });
+
+  inputs[0].addEventListener('change', function () {
+    (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value]);
+  });
+  inputs[1].addEventListener('change', function () {
+    (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value]);
   });
 
   (snapSlider as noUiSlider.target).noUiSlider?.on('update', (values, handle) => {
@@ -149,12 +144,11 @@ function createNoUiSlider(
     inputs[handle].value = roundVal;
   });
 
-  (snapSlider as noUiSlider.target).noUiSlider?.on('change', (values, handle) => {
+  (snapSlider as noUiSlider.target).noUiSlider?.on('set', (values, handle) => {
     const roundVal = Math.round(Number(values[handle])).toString();
-    const rangeValues = query[rangeName]?.split(',') ?? [minRange, maxRange];
+    const rangeValues = queryParams.split(rangeName) ?? [minRange, maxRange];
     rangeValues[handle] = roundVal;
-    query[rangeName] = rangeValues.join(',');
-    updateQueryParams(query);
+    queryParams.set(rangeName, rangeValues.join(','));
   });
 
   return snapSlider;
@@ -164,16 +158,8 @@ interface ICategory {
   title: string;
   count: number;
 }
-
 function getCategories(products: IProduct[], dataKey: IProduct['category'] | IProduct['brand']): ICategory[] {
   if (dataKey === 'category' || dataKey === 'brand') {
-    //   const categories: Record<string, number> = products.reduce((prev, cur) => {
-    //     prev[cur[dataKey]] = (prev[cur[dataKey]] || 0) + 1;
-    //     return prev;
-    //   }, {});
-    //   return Object.entries(categories).map(([title, count]) => {
-    //     return { title, count: count.toString() };
-    //   });
     const categories = products.map((product) => product[dataKey]);
     const uniqueCategories = categories.filter((value, index, self) => self.indexOf(value) === index);
     return uniqueCategories.map((title) => {
@@ -182,4 +168,12 @@ function getCategories(products: IProduct[], dataKey: IProduct['category'] | IPr
     });
   }
   return [];
+}
+
+function getMinValue(key: keyof IProduct, products: IProduct[]): number {
+  return Math.min(...products.map((el) => Number(el[key])));
+}
+
+function getMaxValue(key: keyof IProduct, products: IProduct[]): number {
+  return Math.max(...products.map((el) => Number(el[key])));
 }
