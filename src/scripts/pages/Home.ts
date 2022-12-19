@@ -11,7 +11,7 @@ export async function Home(container: HTMLElement, query: Partial<IQueryParamete
     console.log('shit no products');
     return;
   }
-  const leftFilters = createFilters(data);
+  const leftFilters = createFilters(data.products, query);
 
   const mainSection = document.createElement('div');
   mainSection.className = 'home-page__main';

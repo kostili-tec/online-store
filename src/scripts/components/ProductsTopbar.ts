@@ -18,6 +18,7 @@ export function ProductsTopbar(query: Partial<IQueryParameters>): HTMLElement {
     const sortOption = document.createElement('option');
     sortOption.textContent = option.name;
     sortOption.value = option.val;
+    if (option.val === query.sort) sortOption.selected = true;
     select.append(sortOption);
   });
   select.oninput = (e) => {
@@ -33,13 +34,14 @@ export function ProductsTopbar(query: Partial<IQueryParameters>): HTMLElement {
   gridview.type = 'radio';
   gridview.name = 'view-picker';
   gridview.value = 'grid';
-  gridview.checked = true;
   gridview.className = 'topbar-view-option grid';
   const listView = document.createElement('input');
   listView.type = 'radio';
   listView.name = 'view-picker';
   listView.value = 'list';
   listView.className = 'topbar-view-option list';
+  if (query.view === 'list') listView.checked = true;
+  else gridview.checked = true;
 
   viewContainer.oninput = (e) => {
     const input = e.target as HTMLInputElement;

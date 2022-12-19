@@ -33,7 +33,7 @@
   }
 }
 
-.item-container {
+.categories-item {
   @include fontOpenSans;
   font-size: 14px;
   line-height: 19px;
@@ -42,9 +42,12 @@
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
+  &.category-no-products {
+    filter: grayscale(1);
+  }
 }
 
-.item-container__label{
+.categories-item__label{
   display: block;
   position: relative;
   padding-left: 35px;
@@ -71,10 +74,11 @@
   }
 }
 .label__span-count{
-  padding-right: 0.5rem;
+  margin-right: 1rem;
+  font-size: 11px;
 }
 
-.item-container__label .checkmark::after {
+.categories-item__label .checkmark::after {
   left: 7px;
   top: 3px;
   width: 5px;
