@@ -3,6 +3,8 @@
 @import 'components/mixins';
 @import 'components/buttons';
 @import 'components/tags';
+@import 'components/errors';
+@import 'components/Spinner';
 @import 'components/header';
 @import 'components/mainContainer';
 @import 'components/ProductCard';
@@ -16,7 +18,14 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+}
+
 body {
+  display: flex;
+  flex-direction: column;
   background: $color-body-bg;
   margin: 0 auto;
+  height: 100%;
 }
