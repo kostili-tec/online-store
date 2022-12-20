@@ -1,5 +1,6 @@
 import { IQueryParameters, navigate } from '../router';
 import { getProducts, IProducts, IProduct } from '../testApi';
+import { CartAddButton } from '../components/CartAddButton';
 
 export async function ProductDetails(container: HTMLElement, product: Partial<IQueryParameters>) {
   const productEl = await manageProductDetails(Number(Object.values(product)));
@@ -89,7 +90,7 @@ function createProductDetails(product: IProduct) {
   const category = createProductSpec('Category', product.category);
   const stock = createProductSpec('Stock', product.stock);
 
-  const productBuy = createProductBuy(product.price, product.discountPercentage);
+  const productBuy = createProductBuy(product);
 
   detailsInfoContainer.append(headerProduct, rating, descriptionP, brand, category, stock, productBuy);
   productContainer.append(imagesContainer, detailsInfoContainer);
@@ -110,7 +111,7 @@ function createProductSpec(specTitle: string, specValue: string | number): HTMLD
   return container;
 }
 
-function createProductBuy(price: number, discount: number | null): HTMLDivElement {
+function createProductBuy(product: IProduct): HTMLDivElement {
   const buyContainer = document.createElement('div');
   buyContainer.classList.add('info-container__buy-container');
 
@@ -121,22 +122,22 @@ function createProductBuy(price: number, discount: number | null): HTMLDivElemen
   priceWithDiscount.classList.add('card-pricing__discounted', 'prices-container__discount');
   const priceOriginal = document.createElement('p');
   priceOriginal.classList.add('card-pricing__original', 'prices-container__original');
-  priceOriginal.textContent = `${price} USD`;
-  if (discount) {
-    priceWithDiscount.textContent = `${(price - price * (discount / 100)).toFixed(2)} USD`;
-    priceContainer.append(priceWithDiscount, priceOriginal);
-  } else {
-    priceContainer.append(priceOriginal);
+  priceOriginal.textContent = `${product.price} USD`;
+  if (product.discountPercentage) {
+    priceWithDiscount.textContent = `${(product.price * ((100 - product.discountPercentage) / 100)).toFixed(2)} USD`;
+    priceContainer.append(priceWithDiscount);
   }
+  priceContainer.append(priceOriginal);
+
   const buyButtonsContainer = document.createElement('div');
   buyButtonsContainer.classList.add('buy-container__buttons-container');
 
   const buyNowButton = document.createElement('button');
   buyNowButton.classList.add('buttons-container__button', 'primary-button');
   buyNowButton.textContent = 'Buy Now';
-  const addButton = document.createElement('button');
+
+  const addButton = CartAddButton(product);
   addButton.classList.add('buttons-container__button', 'secondary-button');
-  addButton.textContent = 'Add to cart';
 
   buyButtonsContainer.append(buyNowButton, addButton);
 

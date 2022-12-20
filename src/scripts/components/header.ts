@@ -35,7 +35,7 @@ export function createHeader(): HTMLElement {
 
   const spanTotal = document.createElement('span');
   spanTotal.classList.add('span-container__span', 'span-total');
-  spanTotal.textContent = 'Card total:';
+  spanTotal.textContent = 'Cart total:';
 
   const spanSum = document.createElement('span');
   spanSum.classList.add('span-container__span', 'span-sum');
