@@ -55,7 +55,8 @@ function createProductDetails(product: IProduct) {
   productContainer.classList.add('product-details__container');
   const imagesContainer = document.createElement('div');
   imagesContainer.classList.add('details__img-container');
-  product.images.forEach((el) => {
+  const reverseImagesArr = [...product.images.reverse()];
+  reverseImagesArr.forEach((el) => {
     const imgProduct = document.createElement('img');
     imgProduct.src = el;
     imagesContainer.append(imgProduct);
