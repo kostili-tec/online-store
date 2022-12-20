@@ -1,5 +1,6 @@
 import { IQueryParameters, navigate } from '../router';
 import { getProducts, IProducts, IProduct } from '../testApi';
+import { showError } from '../components/error';
 
 export async function ProductDetails(container: HTMLElement, product: Partial<IQueryParameters>) {
   const productEl = await manageProductDetails(Number(Object.values(product)));
@@ -9,11 +10,11 @@ export async function ProductDetails(container: HTMLElement, product: Partial<IQ
 async function manageProductDetails(id: number): Promise<Array<HTMLDivElement>> {
   const data = await getProducts();
   if (!data) {
-    return [createNotFound('Cannot get data')];
+    return [showError('Cannot get data', true)];
   }
   const product = findProduct(data, id);
   if (!product) {
-    return [createNotFound('Product not found', id)]; // костыль из за того что навигация и детали приходят в разных функциях
+    return [showError('Product not found', true, id)]; // костыль из за того что навигация и детали приходят в разных функциях
   } else {
     const productContainer = createProductDetails(product);
     const navigation = createNavigation(product);
@@ -142,21 +143,6 @@ function createProductBuy(price: number, discount: number | null): HTMLDivElemen
 
   buyContainer.append(priceContainer, buyButtonsContainer);
   return buyContainer;
-}
-
-export function createNotFound(messageText: string, id?: number): HTMLDivElement {
-  const notFoundContainer = document.createElement('div');
-  notFoundContainer.classList.add('product-details__null');
-  const message = document.createElement('p');
-  message.textContent = messageText;
-
-  const backHomeLink = document.createElement('a');
-  backHomeLink.href = '/';
-  backHomeLink.textContent = 'Back to home page?';
-  backHomeLink.addEventListener('click', (e) => navigate('/?', e));
-  notFoundContainer.append(message, backHomeLink);
-  if (id) console.error('id', id, 'not found');
-  return notFoundContainer;
 }
 
 function findProduct(data: IProducts, id: number): undefined | IProduct {
