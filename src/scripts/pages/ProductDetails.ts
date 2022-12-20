@@ -100,7 +100,7 @@ function createProductDetails(product: IProduct) {
   return productContainer;
 }
 
-function createProductSpec(specTitle: string, specValue: string | number): HTMLDivElement {
+export function createProductSpec(specTitle: string, specValue: string | number): HTMLDivElement {
   const container = document.createElement('div');
   container.classList.add('info-container__spec-container');
   const titleSpan = document.createElement('span');
