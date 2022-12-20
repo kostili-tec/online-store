@@ -29,6 +29,7 @@ class EventManager<DataType> {
 export const onQueryChange = new EventManager<Partial<IQueryParameters>>();
 export const onFilteredProducts = new EventManager<IProduct[]>();
 export const onPageReload = new EventManager<string>();
+export const onCartChange = new EventManager<void>();
 
 export function untilReload(unsubscribe: () => void): void {
   onPageReload.subscribe(unsubscribe, true);

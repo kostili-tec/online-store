@@ -1,6 +1,7 @@
 //import '@/styles/components/ProductCard.scss';
 import { IProduct } from '../testApi';
 import { navigate } from '../router';
+import { store } from '../store';
 
 export function ProductCard(product: IProduct, grid: boolean): HTMLElement {
   const container = document.createElement('div');
@@ -75,7 +76,21 @@ export function ProductCard(product: IProduct, grid: boolean): HTMLElement {
   if (!product.stock) {
     cartButton.disabled = true;
     cartButton.textContent = 'Out of stock';
-  } else cartButton.textContent = 'Add to cart';
+  } else {
+    if (store.cart.getItemById(product.id)) cartButton.textContent = 'Drop from cart';
+    else cartButton.textContent = 'Add to cart';
+  }
+  cartButton.onclick = () => {
+    if (product.stock) {
+      if (store.cart.getItemById(product.id)) {
+        store.cart.delete(product.id);
+        cartButton.textContent = 'Add to cart';
+      } else {
+        store.cart.add(product.id, (product.price / 100) * product.discountPercentage);
+        cartButton.textContent = 'Drop from cart';
+      }
+    }
+  };
   buttons.append(cartButton);
 
   buyOptions.append(priceContainer, buttons);
