@@ -1,4 +1,6 @@
-import { queryParams } from '../router';
+import { onCartChange } from '../events';
+import { navigate, queryParams } from '../router';
+import { store } from '../store';
 
 export function createHeader(): HTMLElement {
   const header = document.createElement('header');
@@ -7,6 +9,7 @@ export function createHeader(): HTMLElement {
   const logo = document.createElement('h1');
   logo.textContent = 'Online-Store';
   logo.classList.add('header-logo');
+  logo.onclick = (e) => navigate('/', e);
 
   const searchContainer = document.createElement('div');
   searchContainer.classList.add('header__search-container');
@@ -32,20 +35,23 @@ export function createHeader(): HTMLElement {
 
   const spanTotal = document.createElement('span');
   spanTotal.classList.add('span-container__span', 'span-total');
-  spanTotal.textContent = 'Card total:';
+  spanTotal.textContent = 'Cart total:';
 
   const spanSum = document.createElement('span');
   spanSum.classList.add('span-container__span', 'span-sum');
-  spanSum.textContent = '€300.00';
+  spanSum.textContent = `${store.cart.getPriceAll().toFixed(2)} USD`;
+  onCartChange.subscribe(() => (spanSum.textContent = `${store.cart.getPriceAll().toFixed(2)} USD`));
 
   const basketContainer = document.createElement('div');
   basketContainer.classList.add('header__basket-container');
 
   const totalCount = document.createElement('div');
   totalCount.classList.add('basket-container__total');
-  totalCount.textContent = '0';
+  totalCount.textContent = store.cart.getCountAll().toString();
+  onCartChange.subscribe(() => (totalCount.textContent = store.cart.getCountAll().toString()));
   const basketButton = document.createElement('button');
   basketButton.classList.add('basket-container__basket-button');
+  basketButton.onclick = (e) => navigate('/cart', e);
 
   basketContainer.append(totalCount, basketButton);
   cashSpanContainer.append(spanTotal, spanSum);
