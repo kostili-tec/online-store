@@ -144,7 +144,7 @@ function createProductBuy(price: number, discount: number | null): HTMLDivElemen
   return buyContainer;
 }
 
-function createNotFound(messageText: string, id?: number): HTMLDivElement {
+export function createNotFound(messageText: string, id?: number): HTMLDivElement {
   const notFoundContainer = document.createElement('div');
   notFoundContainer.classList.add('product-details__null');
   const message = document.createElement('p');
