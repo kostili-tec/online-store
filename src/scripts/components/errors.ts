@@ -2,7 +2,7 @@ import { navigate } from '../router';
 
 export function showError(messageText: string, withBack?: boolean, id?: number): HTMLDivElement {
   const errorContainer = document.createElement('div');
-  errorContainer.classList.add('product-details__null');
+  errorContainer.classList.add('main-error');
   const message = document.createElement('p');
   message.textContent = messageText;
   errorContainer.append(message);

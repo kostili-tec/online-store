@@ -4,8 +4,11 @@ import { createFilters } from '../components/filters';
 import { ProductCard } from '../components/ProductCard';
 import { ProductsTopbar } from '../components/ProductsTopbar';
 import { onFilteredProducts, onQueryChange, untilReload } from '../events';
+import { Spinner } from '../components/Spinner';
 
 export async function Home(container: HTMLElement, query: Partial<IQueryParameters>) {
+  container.replaceChildren(Spinner());
+
   const data: IProducts | null = await getProducts();
   if (!data?.products) {
     console.log('shit no products');

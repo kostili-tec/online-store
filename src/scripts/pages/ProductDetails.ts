@@ -1,9 +1,11 @@
 import { IQueryParameters, navigate } from '../router';
 import { getProducts, IProducts, IProduct } from '../testApi';
 import { CartAddButton } from '../components/CartAddButton';
-import { showError } from '../components/error';
+import { showError } from '../components/errors';
+import { Spinner } from '../components/Spinner';
 
 export async function ProductDetails(container: HTMLElement, product: Partial<IQueryParameters>) {
+  container.replaceChildren(Spinner());
   const productEl = await manageProductDetails(Number(Object.values(product)));
   container.replaceChildren(...productEl);
 }
