@@ -1,13 +1,6 @@
-import { navigate } from '../router';
+import { createNotFound } from './ProductDetails';
 
 export function Page404(container: HTMLElement) {
-  const div = document.createElement('div');
-  div.textContent = 'Page not found';
-
-  const link = document.createElement('a');
-  link.textContent = 'Go to home';
-  link.href = '/';
-  link.onclick = (e) => navigate(link.href, e);
-
-  container.replaceChildren(div, link);
+  const container404 = createNotFound('Page not found (404)');
+  container.replaceChildren(container404);
 }
