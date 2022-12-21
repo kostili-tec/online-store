@@ -32,3 +32,7 @@ export async function getProducts() {
     return null;
   }
 }
+
+export function processOrder(time: number): Promise<void> {
+  return new Promise((res) => setTimeout(res, time));
+}
