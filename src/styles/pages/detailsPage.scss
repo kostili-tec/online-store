@@ -78,6 +78,7 @@
     font-size: 17px;
   }
   &__spec-container {
+    @include fontOpenSans;
     display: flex;
     margin-bottom: 1rem;
     .spec-container__title {
