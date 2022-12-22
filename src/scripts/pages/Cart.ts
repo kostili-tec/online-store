@@ -161,12 +161,14 @@ function createPromo() {
   totalDiscount.append(totalDiscountSum);
 
   const promoInputContainer = createElement('div', { className: 'total-container__promo-container' });
+  const aplliedPromos = createElement('div', { className: 'total-container__promo-applied' });
 
   const promoInput = document.createElement('input');
   promoInput.placeholder = 'Apply promo code';
   promoInput.type = 'text';
   promoInput.classList.add('total-container__promo-input', 'search-container__input');
   const promoButton = createElement('button', { textContent: 'Apply now', className: 'total-container__promo-button' });
+  promoButton.addEventListener('click', (e) => applyEvent(e, promoInput, aplliedPromos));
   promoInputContainer.append(promoInput, promoButton);
 
   const totalOrderContainer = createElement('div', { className: 'total-container__total-order' });
@@ -196,11 +198,80 @@ function createPromo() {
     totalFull,
     totalDiscount,
     promoInputContainer,
+    aplliedPromos,
     totalOrderContainer,
     buyContainer,
   );
   return totalContainer;
 }
+
+/* вместо енума, какой нибудь объект чтоли, например 
+promoCodes = {
+  promo1: {
+    code: 'ts',
+    discount: 10,
+  }
+} */
+
+/* interface DOMEvent<T extends EventTarget> extends Event {
+  target: T;
+} */
+
+enum PromoCodes {
+  promo1 = 'rs',
+  promo2 = 'ts',
+}
+
+let countOfCodes = 0; // самый надежный счетчик
+
+/* надо куда-нибудь сохранить введенный промокод и добавить проверку, был ли он использован */
+
+const applyEvent = (e: MouseEvent, inputEl: HTMLInputElement, codesContaner: HTMLElement) => {
+  if (e.target instanceof HTMLElement) {
+    const { target } = e;
+    const inputText = inputEl.value.toLowerCase().trim();
+    if (inputText === PromoCodes.promo1 || inputText === PromoCodes.promo2) {
+      target.textContent = 'Success';
+      if (countOfCodes === 0) {
+        const appliedTitle = createElement('span', { textContent: 'Applied codes: ' });
+        codesContaner.append(appliedTitle, createAppliedPromo(inputText, codesContaner));
+        countOfCodes++;
+      } else if (countOfCodes >= 1) {
+        codesContaner.append(createAppliedPromo(inputText, codesContaner));
+        countOfCodes++;
+      }
+    } else {
+      target.textContent = 'Wrong code';
+    }
+    inputEl.value = '';
+    setInterval(() => (target.textContent = 'Apply now'), 1000);
+  }
+};
+
+const createAppliedPromo = (promoName: string, codesContaner: HTMLElement) => {
+  const codeContainer = createElement('span', { textContent: promoName, className: 'promo-applied__code' });
+
+  const crossSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  crossSvg.classList.add('icon-svg', 'cross-svg', 'cross-svg__promo');
+  const useSvg = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  useSvg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `${sprite}#cross`);
+  crossSvg.appendChild(useSvg);
+  const removeButton = createElement('button', { className: 'prodcut-card__remove-button promo__remove-button' });
+  removeButton.appendChild(crossSvg);
+  removeButton.addEventListener('click', () => deletePromo(codeContainer, codesContaner));
+  codeContainer.appendChild(removeButton);
+  return codeContainer;
+};
+
+const deletePromo = (parentEl: HTMLElement, codesContaner: HTMLElement) => {
+  if (countOfCodes > 1) {
+    countOfCodes--;
+    parentEl.remove();
+  } else if (countOfCodes <= 1) {
+    countOfCodes--;
+    codesContaner.replaceChildren();
+  }
+};
 
 function createDeliveryDate() {
   const month = [

@@ -142,6 +142,25 @@
     }
   }
 }
+.total-container__promo-applied {
+  margin: 6px 0;
+  span {
+    @include fontOpenSans;
+    color: $color-c1c;
+  }
+  .promo-applied__code {
+    display: inline-block;
+    width: 20px;
+    margin-right: 10px;
+  }
+  .promo__remove-button {
+    transform: translate(0, 1px);
+  }
+  .cross-svg__promo {
+    width: 10px;
+    height: 15px;
+  }
+}
 
 .total-order__info {
   .total-order__info-title {
