@@ -5,6 +5,7 @@ import { getProducts } from '../testApi';
 import { IProduct } from '../testApi';
 import { navigate } from '../router';
 import { createProductSpec } from './ProductDetails';
+import { createElement } from '../components/utils';
 import sprite from '../../assets/svg/sprite.svg';
 
 export async function Cart(container: HTMLElement) {
@@ -21,16 +22,22 @@ export async function Cart(container: HTMLElement) {
   const div = document.createElement('div');
   div.style.display = 'grid';
   div.style.gap = '20px';
+  const cartContainer = createElement('div', { className: 'cart-container' });
+  const productsContainer = createElement('div', { className: 'cart-container__products' });
+
   cartItems.forEach((item) => {
     const product = findProduct(products, item.id);
-    if (product) div.append(cartProductCard(product));
+    if (product) productsContainer.append(cartProductCard(product));
   });
 
   const button = document.createElement('button');
   button.className = 'secondary-button';
   button.textContent = 'Test checkout';
 
-  container.replaceChildren(button, div);
+  const promo = createPromo();
+  cartContainer.append(productsContainer, promo);
+
+  container.replaceChildren(cartContainer);
 }
 
 function cartProductCard(product: IProduct): HTMLElement {
@@ -135,6 +142,84 @@ function createPlusMinusButtons(product: IProduct, productCardEl: HTMLDivElement
   });
   buttonsContainer.append(minusButton, countSpan, plusButton);
   return buttonsContainer;
+}
+
+function createPromo() {
+  const totalContainer = createElement('div', { className: 'total-container' });
+
+  const titleOrder = createElement('h4', { className: 'total-container__title', textContent: 'Order Summary' });
+  const products = createElement('p', { className: 'total-container__producs', textContent: 'Products: ' });
+  const productsCount = createElement('span', { textContent: `${store.cart.getCountAll()}` });
+  products.append(productsCount);
+
+  const priceToFixed = store.cart.getPriceAll().toFixed(2);
+  const totalFull = createElement('p', { textContent: 'Full price: ', className: 'total-container__price-full' });
+  const totalFullSum = createElement('span', { textContent: `${priceToFixed} USD` }); // цена без скидок
+  totalFull.append(totalFullSum);
+  const totalDiscount = createElement('p', { textContent: 'Discount: ', className: 'total-container__price-disc' });
+  const totalDiscountSum = createElement('span', { textContent: `sum of discount USD` }); // только сумма скидки
+  totalDiscount.append(totalDiscountSum);
+
+  const promoInputContainer = createElement('div', { className: 'total-container__promo-container' });
+
+  const promoInput = document.createElement('input');
+  promoInput.placeholder = 'Apply promo code';
+  promoInput.type = 'text';
+  promoInput.classList.add('total-container__promo-input', 'search-container__input');
+  const promoButton = createElement('button', { textContent: 'Apply now', className: 'total-container__promo-button' });
+  promoInputContainer.append(promoInput, promoButton);
+
+  const totalOrderContainer = createElement('div', { className: 'total-container__total-order' });
+  const orderInfoContainer = createElement('div', { className: 'total-order__info' });
+  const orderInfoTitle = createElement('p', { className: 'total-order__info-title', textContent: 'Total Order' });
+  const orderInfoDate = createElement('p', {
+    className: 'total-order__info-day',
+    textContent: `Guaranteed delivery day: ${createDeliveryDate()}`,
+  });
+  orderInfoContainer.append(orderInfoTitle, orderInfoDate);
+  totalOrderContainer.append(orderInfoContainer);
+
+  const buyContainer = createElement('div', { className: 'total-container__buy-container' });
+  const confirmButton = createElement('button', {
+    className: 'buy-container__button primary-button',
+    textContent: 'Checkout',
+  });
+  const finishSum = createElement('h3', {
+    className: 'card-pricing__discounted prices-container__discount',
+    textContent: `${priceToFixed} USD`, // итоговая цена со всеми скидками
+  });
+  buyContainer.append(confirmButton, finishSum);
+
+  totalContainer.append(
+    titleOrder,
+    products,
+    totalFull,
+    totalDiscount,
+    promoInputContainer,
+    totalOrderContainer,
+    buyContainer,
+  );
+  return totalContainer;
+}
+
+function createDeliveryDate() {
+  const month = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const thisDate = new Date();
+  thisDate.setDate(thisDate.getDate() + 3);
+  return `${month[thisDate.getMonth()]} ${thisDate.getDate()} ${thisDate.getFullYear()}`;
 }
 
 function findProduct(products: IProduct[], id: number): undefined | IProduct {
