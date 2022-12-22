@@ -3,13 +3,14 @@ export interface ICartItem {
   id: number;
   count: number;
   price: number;
+  priceDiscount: number;
 }
 
 function isCartItems(data: unknown): data is ICartItem[] {
   if (!Array.isArray(data)) return false;
   return data.every((element) => {
     if (element instanceof Object) {
-      return ['id', 'count', 'price'].every((key) => typeof element[key] === 'number');
+      return ['id', 'count', 'price', 'priceDiscount'].every((key) => typeof element[key] === 'number');
     }
   });
 }
@@ -30,10 +31,13 @@ export class Cart {
     localStorage.setItem('ferka123-kostili-cart', JSON.stringify(this.cartItems));
   }
 
-  public add(id: number, price: number): void {
+  public add(id: number, price: number, discount: number): void {
     const cartItem = this.cartItems.find((item) => item.id === id);
     if (cartItem) cartItem.count += 1;
-    else this.cartItems.push({ id, price, count: 1 });
+    else {
+      const priceDiscount = price * ((100 - discount) / 100);
+      this.cartItems.push({ id, price, priceDiscount, count: 1 });
+    }
     onCartChange.emit();
   }
 
