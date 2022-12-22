@@ -5,7 +5,6 @@ import { getProducts } from '../testApi';
 import { IProduct } from '../testApi';
 import { navigate } from '../router';
 import { createProductSpec } from './ProductDetails';
-import { createElement } from '../components/utils';
 import sprite from '../../assets/svg/sprite.svg';
 
 export async function Cart(container: HTMLElement) {
@@ -31,9 +30,7 @@ export async function Cart(container: HTMLElement) {
   button.className = 'secondary-button';
   button.textContent = 'Test checkout';
 
-  const promoSection = createPromo();
-
-  container.replaceChildren(button, div, promoSection);
+  container.replaceChildren(button, div);
 }
 
 function cartProductCard(product: IProduct): HTMLElement {
@@ -125,7 +122,7 @@ function createPlusMinusButtons(product: IProduct, productCardEl: HTMLDivElement
   plusButton.textContent = '+';
 
   plusButton.addEventListener('click', () => {
-    store.cart.add(product.id, product.price, product.discountPercentage);
+    store.cart.add(product.id, product.price);
     countSpan.textContent = String(store.cart.getCountById(product.id));
   });
   minusButton.addEventListener('click', () => {
@@ -138,20 +135,6 @@ function createPlusMinusButtons(product: IProduct, productCardEl: HTMLDivElement
   });
   buttonsContainer.append(minusButton, countSpan, plusButton);
   return buttonsContainer;
-}
-
-function createPromo() {
-  const promoContainer = createElement('div', { className: 'promo-container' });
-  const products = createElement('p', { className: 'promo-container__producs', textContent: 'Products: ' });
-  const productsCount = createElement('span', { textContent: `${store.cart.getCountAll()}` });
-  products.append(productsCount);
-
-  const totalFull = createElement('p', { textContent: 'Total: ' });
-  const priceNoDiscont = store.cart.getItemsAll();
-  console.log(priceNoDiscont);
-  const totalFullSum = createElement('span', { textContent: `${store.cart.getPriceAll}` });
-  promoContainer.append(products);
-  return promoContainer;
 }
 
 function findProduct(products: IProduct[], id: number): undefined | IProduct {

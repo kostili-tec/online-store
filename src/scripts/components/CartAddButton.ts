@@ -16,7 +16,7 @@ export function CartAddButton(product: IProduct): HTMLElement {
         store.cart.delete(product.id);
         cartButton.textContent = 'Add to cart';
       } else {
-        store.cart.add(product.id, product.price, product.discountPercentage);
+        store.cart.add(product.id, product.price * ((100 - product.discountPercentage) / 100));
         cartButton.textContent = 'Drop from cart';
       }
     }
