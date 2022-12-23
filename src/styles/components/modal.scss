@@ -16,8 +16,8 @@
   flex-direction: column;
   border-radius: 12px;
   padding: 30px;
-  width: 55%;
-  height: 85%;
+  margin: 30px;
+  max-width: 700px;
   background-color: $color-c1h;
   font-size: 12px;
   &__title {
@@ -78,6 +78,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  //height: 65px;
   &__caption {
     @include fontPoppinsSemiBold;
   }
@@ -85,8 +86,10 @@
     background-color: $color-c1h;
     border: 1px solid $color-c1d;
     border-radius: 12px;
-    padding: 8px;
+    padding: 0 12px;
     width: 100%;
+    height: 35px;
+    align-self: flex-end;
     .ccnumber-input & {
       font-size: 1.2em;
       text-align: center;
