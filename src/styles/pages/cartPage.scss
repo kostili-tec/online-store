@@ -143,15 +143,23 @@
   }
 }
 .total-container__promo-applied {
-  margin: 6px 0;
-  span {
-    @include fontOpenSans;
-    color: $color-c1c;
+  margin: 12px 0 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  position: relative;
+  p {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: $color-black-headers;
+  }
+  .promo-applied__title {
+    position: absolute;
+    align-self: flex-start;
   }
   .promo-applied__code {
     display: inline-block;
-    width: 20px;
-    margin-right: 10px;
+    margin-right: 16px;
   }
   .promo__remove-button {
     transform: translate(0, 1px);

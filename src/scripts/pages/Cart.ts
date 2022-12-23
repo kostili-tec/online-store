@@ -213,10 +213,6 @@ promoCodes = {
   }
 } */
 
-/* interface DOMEvent<T extends EventTarget> extends Event {
-  target: T;
-} */
-
 enum PromoCodes {
   promo1 = 'rs',
   promo2 = 'ts',
@@ -233,7 +229,10 @@ const applyEvent = (e: MouseEvent, inputEl: HTMLInputElement, codesContaner: HTM
     if (inputText === PromoCodes.promo1 || inputText === PromoCodes.promo2) {
       target.textContent = 'Success';
       if (countOfCodes === 0) {
-        const appliedTitle = createElement('span', { textContent: 'Applied codes: ' });
+        const appliedTitle = createElement('span', {
+          textContent: 'Applied codes: ',
+          className: 'promo-applied__title',
+        });
         codesContaner.append(appliedTitle, createAppliedPromo(inputText, codesContaner));
         countOfCodes++;
       } else if (countOfCodes >= 1) {
@@ -244,12 +243,12 @@ const applyEvent = (e: MouseEvent, inputEl: HTMLInputElement, codesContaner: HTM
       target.textContent = 'Wrong code';
     }
     inputEl.value = '';
-    setInterval(() => (target.textContent = 'Apply now'), 1000);
+    setTimeout(() => (target.textContent = 'Apply now'), 850);
   }
 };
 
 const createAppliedPromo = (promoName: string, codesContaner: HTMLElement) => {
-  const codeContainer = createElement('span', { textContent: promoName, className: 'promo-applied__code' });
+  const codeContainer = createElement('p', { textContent: `-10% ${promoName}`, className: 'promo-applied__code' });
 
   const crossSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   crossSvg.classList.add('icon-svg', 'cross-svg', 'cross-svg__promo');
