@@ -8,7 +8,7 @@ import { createProductSpec } from './ProductDetails';
 import { createElement } from '../components/utils';
 import sprite from '../../assets/svg/sprite.svg';
 
-export async function Cart(container: HTMLElement) {
+export async function Cart(container: HTMLElement): Promise<void> {
   const cartItems = store.cart.getItemsAll();
   if (cartItems.length === 0) return container.replaceChildren(showError('Your cart is empty', true));
 
@@ -116,7 +116,7 @@ function cartProductCard(product: IProduct): HTMLElement {
   return container;
 }
 
-function createPlusMinusButtons(product: IProduct, productCardEl: HTMLDivElement) {
+function createPlusMinusButtons(product: IProduct, productCardEl: HTMLDivElement): HTMLElement {
   const buttonsContainer = document.createElement('div');
   buttonsContainer.classList.add('count-container');
   const minusButton = document.createElement('button');
@@ -144,7 +144,7 @@ function createPlusMinusButtons(product: IProduct, productCardEl: HTMLDivElement
   return buttonsContainer;
 }
 
-function createPromo() {
+function createPromo(): HTMLElement {
   const totalContainer = createElement('div', { className: 'total-container' });
 
   const titleOrder = createElement('h4', { className: 'total-container__title', textContent: 'Order Summary' });
@@ -222,7 +222,7 @@ let countOfCodes = 0; // самый надежный счетчик
 
 /* надо куда-нибудь сохранить введенный промокод и добавить проверку, был ли он использован */
 
-const applyEvent = (e: MouseEvent, inputEl: HTMLInputElement, codesContaner: HTMLElement) => {
+const applyEvent = (e: MouseEvent, inputEl: HTMLInputElement, codesContaner: HTMLElement): void => {
   if (e.target instanceof HTMLElement) {
     const { target } = e;
     const inputText = inputEl.value.toLowerCase().trim();
@@ -247,7 +247,7 @@ const applyEvent = (e: MouseEvent, inputEl: HTMLInputElement, codesContaner: HTM
   }
 };
 
-const createAppliedPromo = (promoName: string, codesContaner: HTMLElement) => {
+const createAppliedPromo = (promoName: string, codesContaner: HTMLElement): HTMLElement => {
   const codeContainer = createElement('p', { textContent: `-10% ${promoName}`, className: 'promo-applied__code' });
 
   const crossSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -257,12 +257,12 @@ const createAppliedPromo = (promoName: string, codesContaner: HTMLElement) => {
   crossSvg.appendChild(useSvg);
   const removeButton = createElement('button', { className: 'prodcut-card__remove-button promo__remove-button' });
   removeButton.appendChild(crossSvg);
-  removeButton.addEventListener('click', () => deletePromo(codeContainer, codesContaner));
+  removeButton.addEventListener('click', () => deleteAppliedPromo(codeContainer, codesContaner));
   codeContainer.appendChild(removeButton);
   return codeContainer;
 };
 
-const deletePromo = (parentEl: HTMLElement, codesContaner: HTMLElement) => {
+const deleteAppliedPromo = (parentEl: HTMLElement, codesContaner: HTMLElement): void => {
   if (countOfCodes > 1) {
     countOfCodes--;
     parentEl.remove();
@@ -272,7 +272,7 @@ const deletePromo = (parentEl: HTMLElement, codesContaner: HTMLElement) => {
   }
 };
 
-function createDeliveryDate() {
+function createDeliveryDate(): string {
   const month = [
     'January',
     'February',
