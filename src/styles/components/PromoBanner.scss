@@ -1,0 +1,26 @@
+.promo-container {
+  display: flex;
+  margin-bottom: 10px;
+}
+.promo-slider {
+  width: 100%;
+  overflow-x: hidden;
+  &__track {
+    display: flex;
+    justify-content: center;
+  }
+  &__slide {
+    width: 100%;
+  }
+}
+.promo-control {
+  border: none;
+  width: 30px;
+  background-color: $color-c2b;
+  &.control-left {
+    -webkit-mask: url(../assets/svg/arrow-left.svg) no-repeat center/ 200%;
+  }
+  &.control-right {
+    -webkit-mask: url(../assets/svg/arrow-right.svg) no-repeat center/ 200%;
+  }
+}

@@ -5,3 +5,5 @@ export const createElement = (tagName: string, options?: Partial<HTMLElement>): 
   }
   return element;
 };
+
+export const createImage = (options?: Partial<HTMLImageElement>) => createElement('img', options) as HTMLImageElement;

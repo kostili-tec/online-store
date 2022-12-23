@@ -58,10 +58,7 @@ const config = {
       {
         test: /\.svg$/i,
         type: 'asset/inline',
-/*         generator: {
-          filename: 'assets/svg/[name][ext][query]',
-        } */
-      }
+      },
 
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
