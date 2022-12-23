@@ -5,9 +5,11 @@ import { getProducts } from '../testApi';
 import { IProduct } from '../testApi';
 import { navigate } from '../router';
 import { createProductSpec } from './ProductDetails';
+import { createElement } from '../components/utils';
+import { createPromo } from '../components/totalPromo';
 import sprite from '../../assets/svg/sprite.svg';
 
-export async function Cart(container: HTMLElement) {
+export async function Cart(container: HTMLElement): Promise<void> {
   const cartItems = store.cart.getItemsAll();
   if (cartItems.length === 0) return container.replaceChildren(showError('Your cart is empty', true));
 
@@ -21,16 +23,22 @@ export async function Cart(container: HTMLElement) {
   const div = document.createElement('div');
   div.style.display = 'grid';
   div.style.gap = '20px';
+  const cartContainer = createElement('div', { className: 'cart-container' });
+  const productsContainer = createElement('div', { className: 'cart-container__products' });
+
   cartItems.forEach((item) => {
     const product = findProduct(products, item.id);
-    if (product) div.append(cartProductCard(product));
+    if (product) productsContainer.append(cartProductCard(product));
   });
 
   const button = document.createElement('button');
   button.className = 'secondary-button';
   button.textContent = 'Test checkout';
 
-  container.replaceChildren(button, div);
+  const promo = createPromo();
+  cartContainer.append(productsContainer, promo);
+
+  container.replaceChildren(cartContainer);
 }
 
 function cartProductCard(product: IProduct): HTMLElement {
@@ -109,7 +117,7 @@ function cartProductCard(product: IProduct): HTMLElement {
   return container;
 }
 
-function createPlusMinusButtons(product: IProduct, productCardEl: HTMLDivElement) {
+function createPlusMinusButtons(product: IProduct, productCardEl: HTMLDivElement): HTMLElement {
   const buttonsContainer = document.createElement('div');
   buttonsContainer.classList.add('count-container');
   const minusButton = document.createElement('button');

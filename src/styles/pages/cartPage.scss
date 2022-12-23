@@ -1,3 +1,16 @@
+.cart-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.cart-container__products {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-grow: 2;
+}
+
 .cart-product__card {
   h4 {
     margin-top: 0;
@@ -63,5 +76,122 @@
       background: $color-c1d;
       color: $color-black-headers;
     }
+  }
+}
+
+.total-container {
+  @include fontPoppinsSemiBold;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 2rem 1rem;
+  margin-left: 2rem;
+  flex-grow: 1;
+  border: 1px solid #D1D1D1;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 18px;
+  color: $color-black-headers;
+  p {
+    @include fontPoppinsMedium;
+    margin: 8px 0;
+    span {
+      @include fontPoppinsSemiBold;
+    }
+  }
+}
+
+.total-container__title {
+  font-size: 22px;
+  margin-top: 0;
+  position: relative;
+  &::after {
+    content: '';
+    height: 1px;
+    width: 100%;
+    background-color: #D1D1D1;
+    position: absolute;
+    left: 0;
+    transform: translateY(36px);
+  }
+
+ 
+}
+
+
+.total-container__promo-container {
+  position: relative;
+  .total-container__promo-input{
+    width: 100%;
+    background: $color-c1h;
+  }
+  .total-container__promo-button {
+    position: absolute;
+    right: 0;
+    border: none;
+    background: none;
+    @include fontPoppinsBold;
+    font-size: 15px;
+    line-height: 22px;
+    transform: translate(-1rem, 9px);
+    transition: ease-in 0.2s;
+    color: $color-c1b;
+    cursor: pointer;
+    &:hover {
+      color: $color-black-headers;
+    }
+  }
+}
+.total-container__promo-applied {
+  margin: 12px 0 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  position: relative;
+  p {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: $color-black-headers;
+  }
+  .promo-applied__title {
+    position: absolute;
+    align-self: flex-start;
+  }
+  .promo-applied__code {
+    display: inline-block;
+    margin-right: 16px;
+  }
+  .promo__remove-button {
+    transform: translate(0, 1px);
+  }
+  .cross-svg__promo {
+    width: 10px;
+    height: 15px;
+  }
+}
+
+.total-order__info {
+  .total-order__info-title {
+    @include fontPoppinsBold
+  }
+  .total-order__info-day {
+    @include fontOpenSans;
+    color: $color-c2a;
+  }
+}
+
+.total-container__buy-container {
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  .buy-container__button {
+    font-size: 15px;
+    width: 208px;
+    height: 42px;
+    transition: ease 0.2s;
+  }
+  h3 {
+    font-size: 26px;
   }
 }

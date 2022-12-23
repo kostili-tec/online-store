@@ -2,6 +2,7 @@ import { processOrder } from '../testApi';
 import { navigate } from '../router';
 import { Spinner } from './Spinner';
 import { store } from '../store';
+import { createElement } from './utils';
 
 interface IFormatter {
   format: (arg: string) => string;
@@ -194,14 +195,6 @@ const createCCNumber = (data: InputDataInterface): DocumentFragment => {
   const fragment = document.createDocumentFragment();
   fragment.append(container, ccLogos);
   return fragment;
-};
-
-const createElement = (tagName: string, options?: Partial<HTMLElement>): HTMLElement => {
-  const element = document.createElement(tagName);
-  if (options) {
-    Object.assign(element, options);
-  }
-  return element;
 };
 
 const createInput = (options?: Partial<HTMLInputElement>) => createElement('input', options) as HTMLInputElement;
