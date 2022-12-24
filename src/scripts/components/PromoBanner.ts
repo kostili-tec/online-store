@@ -1,29 +1,55 @@
-import { createElement, createImage } from './utils';
+import { Timer, createElement, createImage } from './utils';
+import { showToast } from './toast';
 
 import newcomer from '../../assets/promos/newcomer.png';
 import student from '../../assets/promos/student.png';
 import ny from '../../assets/promos/ny.png';
 import { onPageReload } from '../events';
 
+interface IPromoBanner {
+  code: string;
+  src: string;
+}
+
+const promoBanners: IPromoBanner[] = [
+  { code: 'NEWCOMER', src: newcomer },
+  { code: 'HAPPY-NY', src: ny },
+  { code: 'RS-STUDENT', src: student },
+];
+
 export function PromoBanner(): HTMLElement {
   const container = createElement('div', { className: 'promo-container' });
   const slider = createElement('div', { className: 'promo-slider' });
   const track = createElement('div', { className: 'promo-slider__track' });
   slider.append(track);
-  [newcomer, student, ny].forEach((src) => {
-    track.append(createImage({ src, className: 'promo-slider__slide' }));
+  promoBanners.forEach((promoBanner) => {
+    track.append(
+      createImage({
+        src: promoBanner.src,
+        className: 'promo-slider__slide',
+        onclick: (e) => {
+          navigator.clipboard
+            .writeText(promoBanner.code)
+            .then(() => showToast('Code copied to clipboard!', 0, { left: e.clientX, top: e.clientY }));
+        },
+      }),
+    );
   });
-  const interval = setInterval(() => slide(track, -1), 10000);
-  onPageReload.subscribe(() => clearInterval(interval), true);
+  const timer = new Timer(() => slide(track, -1), 12000);
+  onPageReload.subscribe(() => timer.stop(), true);
+  container.onmouseenter = () => timer.stop();
+  container.onmouseleave = () => timer.restart();
 
   container.append(
-    createElement('button', {
-      className: 'promo-control control-left',
+    createElement('span', {
+      textContent: '<',
+      className: 'promo-control',
       onclick: () => slide(track, 1),
     }),
     slider,
-    createElement('button', {
-      className: 'promo-control control-right',
+    createElement('span', {
+      textContent: '>',
+      className: 'promo-control',
       onclick: () => slide(track, -1),
     }),
   );

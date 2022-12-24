@@ -3,4 +3,7 @@ declare module '*.svg' {
   export default svg;
 }
 
-declare module '*.png';
+declare module '*.png' {
+  const png: string;
+  export default png;
+}
