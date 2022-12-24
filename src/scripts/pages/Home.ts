@@ -5,6 +5,7 @@ import { ProductCard } from '../components/ProductCard';
 import { ProductsTopbar } from '../components/ProductsTopbar';
 import { onFilteredProducts, onQueryChange, untilReload } from '../events';
 import { Spinner } from '../components/Spinner';
+import { PromoBanner } from '../components/PromoBanner';
 
 export async function Home(container: HTMLElement, query: Partial<IQueryParameters>) {
   container.replaceChildren(Spinner());
@@ -36,7 +37,7 @@ export async function Home(container: HTMLElement, query: Partial<IQueryParamete
   const div = document.createElement('div');
   div.className = 'home-page';
   div.append(leftFilters, mainSection);
-  container.replaceChildren(div);
+  container.replaceChildren(PromoBanner(), div);
 }
 
 function updateProducts(container: HTMLElement, products: IProduct[], query: Partial<IQueryParameters>) {

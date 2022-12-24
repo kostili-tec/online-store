@@ -1,0 +1,30 @@
+.promo-container {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+}
+.promo-slider {
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0 5px;
+  &__track {
+    display: flex;
+    justify-content: center;
+  }
+  &__slide {
+    width: 100%;
+    cursor: pointer;
+  }
+}
+.promo-control {
+  @include fontPoppinsMedium;
+  font-size: 30px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: $color-c2a;
+  transition: .1s;
+  &:hover {
+    transform: scale(1.2);
+  }
+}
