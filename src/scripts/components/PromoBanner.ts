@@ -1,9 +1,9 @@
 import { Timer, createElement, createImage } from './utils';
 import { showToast } from './toast';
 
-import newcomer from '../../assets/promos/newcomer.png';
-import student from '../../assets/promos/student.png';
-import ny from '../../assets/promos/ny.png';
+import newcomer from '../../assets/promos/newcomer.webp';
+import student from '../../assets/promos/student.webp';
+import ny from '../../assets/promos/ny.webp';
 import { onPageReload } from '../events';
 
 interface IPromoBanner {
@@ -13,8 +13,8 @@ interface IPromoBanner {
 
 const promoBanners: IPromoBanner[] = [
   { code: 'NEWCOMER', src: newcomer },
-  { code: 'HAPPY-NY', src: ny },
   { code: 'RS-STUDENT', src: student },
+  { code: 'HAPPY-NY', src: ny },
 ];
 
 export function PromoBanner(): HTMLElement {
