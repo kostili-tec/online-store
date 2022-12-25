@@ -6,6 +6,7 @@ import { ProductsTopbar } from '../components/ProductsTopbar';
 import { onFilteredProducts, onQueryChange, untilReload } from '../events';
 import { Spinner } from '../components/Spinner';
 import { PromoBanner } from '../components/PromoBanner';
+import { createElement } from '../components/utils';
 
 export async function Home(container: HTMLElement, query: Partial<IQueryParameters>) {
   container.replaceChildren(Spinner());
@@ -42,10 +43,20 @@ export async function Home(container: HTMLElement, query: Partial<IQueryParamete
 
 function updateProducts(container: HTMLElement, products: IProduct[], query: Partial<IQueryParameters>) {
   const filteredProducts = filterAndSort(products, query);
-  onFilteredProducts.emit(filteredProducts);
-  container.replaceChildren(
-    ...filteredProducts.map((product) => ProductCard(product, !query.view || query.view === 'grid')),
-  );
+  onFilteredProducts.emit([...filteredProducts]);
+  container.replaceChildren();
+  const loadMoreBtn = createElement('button', {
+    textContent: 'Load more',
+    className: 'products-container__load secondary-button',
+  });
+  const loadChunk = () => {
+    const chunk = filteredProducts.splice(0, 15);
+    container.append(...chunk.map((product) => ProductCard(product, !query.view || query.view === 'grid')));
+    if (filteredProducts.length === 0) loadMoreBtn.remove();
+    else container.append(loadMoreBtn);
+  };
+  loadMoreBtn.onclick = loadChunk;
+  loadChunk();
 }
 
 function filterAndSort(products: IProduct[], query: Partial<IQueryParameters>): IProduct[] {

@@ -1,8 +1,9 @@
 .home-page {
-    display: flex;
-    gap: 25px;
+  display: flex;
+  gap: 25px;
   &__main {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 30px;
     padding-top: 24px;
@@ -14,4 +15,8 @@
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 20px;
+  &__load {
+    width: 100%;
+    border: none;
+  }
 }
