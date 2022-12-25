@@ -7,7 +7,6 @@ import { navigate } from '../router';
 import { createProductSpec } from './ProductDetails';
 import { createElement, createSvg } from '../components/utils';
 import { createPromo } from '../components/totalPromo';
-import sprite from '../../assets/svg/sprite.svg';
 
 export async function Cart(container: HTMLElement): Promise<void> {
   const cartItems = store.cart.getItemsAll();
@@ -92,11 +91,7 @@ function cartProductCard(product: IProduct): HTMLElement {
   productImage.alt = product.title;
   productImage.onclick = (e) => navigate('/product?=' + product.id, e);
 
-  const crossSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  crossSvg.classList.add('icon-svg', 'cross-svg');
-  const useSvg = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-  useSvg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `${sprite}#cross`);
-  crossSvg.appendChild(useSvg);
+  const crossSvg = createSvg('cross-svg', 'cross');
   const removeButton = document.createElement('button');
   removeButton.classList.add('prodcut-card__remove-button');
   removeButton.appendChild(crossSvg);
