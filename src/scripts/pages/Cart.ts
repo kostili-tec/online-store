@@ -5,7 +5,7 @@ import { getProducts } from '../testApi';
 import { IProduct } from '../testApi';
 import { navigate } from '../router';
 import { createProductSpec } from './ProductDetails';
-import { createElement } from '../components/utils';
+import { createElement, createSvg } from '../components/utils';
 import { createPromo } from '../components/totalPromo';
 import sprite from '../../assets/svg/sprite.svg';
 
@@ -20,25 +20,55 @@ export async function Cart(container: HTMLElement): Promise<void> {
   }
   const products = data.products;
 
-  const div = document.createElement('div');
-  div.style.display = 'grid';
-  div.style.gap = '20px';
   const cartContainer = createElement('div', { className: 'cart-container' });
   const productsContainer = createElement('div', { className: 'cart-container__products' });
+  const cardsContainer = createElement('div', { className: 'cart-container__products-container' });
 
   cartItems.forEach((item) => {
     const product = findProduct(products, item.id);
-    if (product) productsContainer.append(cartProductCard(product));
+    if (product) cardsContainer.append(cartProductCard(product));
   });
 
-  const button = document.createElement('button');
-  button.className = 'secondary-button';
-  button.textContent = 'Test checkout';
+  const controllPagination = topBar();
+  productsContainer.append(controllPagination, cardsContainer);
 
   const promo = createPromo();
   cartContainer.append(productsContainer, promo);
 
   container.replaceChildren(cartContainer);
+}
+
+function topBar(): HTMLElement {
+  const topBarContainer = createElement('div', { className: 'products__top-container' });
+  const topTitle = createElement('h2', { textContent: 'Cart' });
+
+  const controlContainer = createElement('div', { className: 'top-container__control' });
+  const labelSelect = document.createElement('label');
+  labelSelect.textContent = 'Items per page:';
+  labelSelect.setAttribute('for', 'count-products');
+  const customSelect = createElement('div', { className: 'custom-select' });
+  const itemsSelect = createElement('select', { id: 'count-products' });
+  itemsSelect.classList.add('top-container__control-select');
+  const optionsValues = [3, 5, 10, 20];
+  optionsValues.forEach((el, ind) => {
+    const selectOption = document.createElement('option');
+    selectOption.value = String(ind);
+    selectOption.textContent = String(el);
+    itemsSelect.append(selectOption);
+  });
+  customSelect.append(itemsSelect);
+  const paginationContainer = createElement('div', {
+    className: 'top-container__pagination-container count-container',
+  });
+  const leftButton = createElement('button', { className: 'pagination-container__left' });
+  leftButton.append(createSvg('chevron-left', 'chevron-left'));
+  const rightButton = createElement('button', { className: 'pagination-container__right' });
+  rightButton.append(createSvg('chevron-right', 'chevron-left'));
+  const numberPageSpan = createElement('span', { textContent: '1' });
+  paginationContainer.append(leftButton, numberPageSpan, rightButton);
+  controlContainer.append(labelSelect, customSelect, paginationContainer);
+  topBarContainer.append(topTitle, controlContainer);
+  return topBarContainer;
 }
 
 function cartProductCard(product: IProduct): HTMLElement {
