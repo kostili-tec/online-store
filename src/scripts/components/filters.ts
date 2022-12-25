@@ -2,11 +2,31 @@ import * as noUiSlider from 'nouislider';
 import 'nouislider/dist/nouislider.css';
 import { IProduct } from '../testApi';
 import { IQueryParameters, queryParams } from '../router';
-import { onFilteredProducts, untilReload } from '../events';
+import { onFilteredProducts, onQueryChange, untilReload } from '../events';
+import { createElement } from './utils';
+import { showToast } from './toast';
 
 export function createFilters(products: IProduct[]) {
   const filtersContainer = document.createElement('div');
   filtersContainer.classList.add('filters-container');
+
+  const buttons = createElement('div', { className: 'filters-buttons' });
+  buttons.append(
+    createElement('button', {
+      textContent: 'Copy link',
+      className: 'secondary-button',
+      onclick: (e) => {
+        navigator.clipboard
+          .writeText(window.location.href)
+          .then(() => showToast('Link copied to clipboard!', 0, { left: e.pageX, top: e.pageY }));
+      },
+    }),
+    createElement('button', {
+      textContent: 'Reset filter',
+      className: 'secondary-button',
+      onclick: () => queryParams.clear(),
+    }),
+  );
 
   const categoriesContainer = document.createElement('div');
   categoriesContainer.classList.add('filters__categories-container');
@@ -31,7 +51,15 @@ export function createFilters(products: IProduct[]) {
   const priceSlider = createRangeInput('price', getMinValue('price', products), getMaxValue('price', products));
   const stockSlider = createRangeInput('stock', getMinValue('stock', products), getMaxValue('stock', products));
 
-  filtersContainer.append(headCatogory, categoriesContainer, headBrand, brandsContainer, priceSlider, stockSlider);
+  filtersContainer.append(
+    buttons,
+    headCatogory,
+    categoriesContainer,
+    headBrand,
+    brandsContainer,
+    priceSlider,
+    stockSlider,
+  );
   return filtersContainer;
 }
 
@@ -42,7 +70,10 @@ function createInputCategory(category: ICategory, key: 'brand' | 'category'): HT
   const checkBox = document.createElement('input');
   checkBox.type = 'checkbox';
   checkBox.id = 'filter' + category.title;
-  if (queryParams.get(key).includes(category.title)) checkBox.checked = true;
+  if (queryParams.split(key)?.includes(category.title)) checkBox.checked = true;
+  untilReload(
+    onQueryChange.subscribe(() => (checkBox.checked = queryParams.split(key)?.includes(category.title) ?? false)),
+  );
 
   const labelForCheckBox = document.createElement('label');
   labelForCheckBox.textContent = category.title;
@@ -138,6 +169,12 @@ function createNoUiSlider(
   inputs[1].addEventListener('change', function () {
     (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value]);
   });
+
+  untilReload(
+    onQueryChange.subscribe((query) => {
+      if (!query[rangeName]) (snapSlider as noUiSlider.target).noUiSlider?.set([minRange, maxRange], false);
+    }),
+  );
 
   (snapSlider as noUiSlider.target).noUiSlider?.on('update', (values, handle) => {
     const roundVal = Math.round(Number(values[handle])).toString();

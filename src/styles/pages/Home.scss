@@ -1,12 +1,12 @@
 .home-page {
   display: flex;
   gap: 25px;
+  padding-top: 24px;
   &__main {
     display: flex;
     flex: 1;
     flex-direction: column;
     gap: 30px;
-    padding-top: 24px;
   }
 }
 

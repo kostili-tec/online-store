@@ -30,7 +30,7 @@ export function PromoBanner(): HTMLElement {
         onclick: (e) => {
           navigator.clipboard
             .writeText(promoBanner.code)
-            .then(() => showToast('Code copied to clipboard!', 0, { left: e.clientX, top: e.clientY }));
+            .then(() => showToast('Code copied to clipboard!', 0, { left: e.pageX, top: e.pageY }));
         },
       }),
     );

@@ -78,6 +78,9 @@ class SearchParams {
     }
     this.updateHistory(query);
   }
+  public clear() {
+    this.updateHistory(new URLSearchParams());
+  }
   public get(param: keyof IQueryParameters): string {
     const query = new URLSearchParams(window.location.search);
     return query.get(param) ?? '';
