@@ -44,6 +44,10 @@ export async function Home(container: HTMLElement, query: Partial<IQueryParamete
 function updateProducts(container: HTMLElement, products: IProduct[], query: Partial<IQueryParameters>) {
   const filteredProducts = filterAndSort(products, query);
   onFilteredProducts.emit([...filteredProducts]);
+  if (filteredProducts.length === 0) {
+    const error = createElement('p', { textContent: 'No products found', className: 'products-container__error' });
+    return container.replaceChildren(error);
+  }
   container.replaceChildren();
   const loadMoreBtn = createElement('button', {
     textContent: 'Load more',

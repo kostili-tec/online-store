@@ -19,4 +19,10 @@
     width: 100%;
     border: none;
   }
+  &__error {
+    @include fontPoppinsSemiBold;
+    font-size: 1.2rem;
+    margin: 50px auto;
+    color: $color-c1b;
+  }
 }
