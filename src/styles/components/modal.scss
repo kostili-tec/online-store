@@ -14,10 +14,13 @@
   @include fontOpenSans;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   border-radius: 12px;
   padding: 30px;
   margin: 30px;
   max-width: 700px;
+  width: 100%;
+  min-height: 630px;
   background-color: $color-c1h;
   font-size: 12px;
   &__title {
@@ -62,7 +65,6 @@
     flex-direction: column;
     gap: 20px;
     align-items: center;
-    justify-content: center;
     height: 100%;
   }
   & .spinner-loader {
@@ -78,7 +80,6 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  //height: 65px;
   &__caption {
     @include fontPoppinsSemiBold;
   }
@@ -93,7 +94,6 @@
     .ccnumber-input & {
       font-size: 1.2em;
       text-align: center;
-      //letter-spacing: 5px;
       &:not(:placeholder-shown) {
         letter-spacing: 3px;
       }

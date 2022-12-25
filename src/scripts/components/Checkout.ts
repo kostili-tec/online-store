@@ -110,9 +110,9 @@ export function Checkout(close: () => void): HTMLElement {
 
   const title = createElement('h2', { className: 'checkout-modal__title', textContent: 'Checkout' });
 
-  const billingSubtitle = createSubtitle('billing', 1, 2);
-  const billingInfo = createElement('div', { className: 'checkout-modal__inputs' });
-  billingInfo.append(
+  const shippingSubtitle = createSubtitle('shipping', 1, 2);
+  const shippingInfo = createElement('div', { className: 'checkout-modal__inputs' });
+  shippingInfo.append(
     createValidatedInput(inputs.name),
     createValidatedInput(inputs.phone),
     createValidatedInput(inputs.email),
@@ -139,7 +139,7 @@ export function Checkout(close: () => void): HTMLElement {
     textContent: 'Place order',
   });
 
-  form.append(title, billingSubtitle, billingInfo, ccSubtitle, ccInfo, placeOrder);
+  form.append(title, shippingSubtitle, shippingInfo, ccSubtitle, ccInfo, placeOrder);
   return form;
 }
 
