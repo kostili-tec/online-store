@@ -11,6 +11,122 @@
   flex-grow: 2;
 }
 
+.products__top-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  height: 50px;
+  h2 {
+    @include fontPoppinsBold;
+  }
+}
+
+.top-container__control {
+  display: flex;
+  
+  align-items: center;
+  label {
+    @include fontPoppinsMedium;
+    margin-right: 0.5rem;
+    line-height: 16px;
+  }
+}
+
+.custom-select {
+  display: grid;
+  grid-template-areas: "select";
+  align-items: center;
+  position: relative;
+
+  select,
+  &::after {
+    grid-area: select;
+  }
+
+  border: 1px solid $color-c1d;
+  border-radius: 12px;
+  padding: 0.25em 0.5em;
+
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1.1;
+  background-color: $color-c1h;
+
+  &:not(.select--multiple)::after {
+    content: "";
+    justify-self: end;
+    width: 0.5em;
+    height: 0.3em;
+    background-color: $color-c1c;
+    clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+  }
+}
+
+.top-container__control-select {
+  @include fontPoppinsSemiBold;
+  position: relative;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  width: 100%;
+  font-size: 16px;
+  cursor: inherit;
+  line-height: inherit;
+  z-index: 1;
+  &::-ms-expand {
+    display: none;
+  }
+  outline: none;
+}
+
+.top-container__pagination-container {
+  display: flex;
+  align-self: center;
+  justify-content: space-between;
+  margin-left: 1rem;
+  span {
+    @include fontPoppinsSemiBold;
+    font-size: 16px;
+  }
+}
+
+.pagination-container__left, .pagination-container__right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: ease-in 0.2s;
+  &:hover {
+    background: $color-c1d;
+    > .chevron-left, .chevron-right {
+      fill: $color-black-headers;
+    }
+  }
+}
+
+.chevron-left, .chevron-right {
+  fill: $color-c1c;
+  width: 20px;
+  height: 20px;
+  transition: ease-in 0.2s;
+}
+
+.chevron-right {
+  transform: rotate(180deg);
+}
+
+.cart-container__products-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .cart-product__card {
   h4 {
     margin-top: 0;
@@ -84,6 +200,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  margin-top: 66px;
   padding: 2rem 1rem;
   margin-left: 2rem;
   flex-grow: 1;
