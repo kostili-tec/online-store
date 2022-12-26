@@ -56,7 +56,6 @@ function createNavigation(product: IProduct) {
 }
 
 function createProductDetails(product: IProduct) {
-  console.log(product);
   const productContainer = document.createElement('div');
   productContainer.classList.add('product-details__container');
   const imagesContainer = document.createElement('div');
