@@ -10,7 +10,7 @@ export const createElement = (tagName: string, options?: Partial<HTMLElement>): 
 
 export const createSvg = (classSvg: string, idSvg: string) => {
   const svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svgEl.classList.add('icon-svg', `${classSvg}`);
+  svgEl.classList.add('icon-svg', ...classSvg.split(' '));
   const useEl = document.createElementNS('http://www.w3.org/2000/svg', 'use');
   useEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `${sprite}#${idSvg}`);
   svgEl.appendChild(useEl);

@@ -12,6 +12,7 @@
 
 .checkout-modal {
   @include fontOpenSans;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -66,6 +67,15 @@
     gap: 20px;
     align-items: center;
     height: 100%;
+  }
+  &__close {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    cursor: pointer;
+    &:hover {
+      fill: $color-black-headers;
+    }
   }
   & .spinner-loader {
     height: auto;

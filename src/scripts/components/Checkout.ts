@@ -2,7 +2,7 @@ import { processOrder } from '../testApi';
 import { navigate } from '../router';
 import { Spinner } from './Spinner';
 import { store } from '../store';
-import { createElement } from './utils';
+import { createElement, createSvg } from './utils';
 
 interface IFormatter {
   format: (arg: string) => string;
@@ -12,6 +12,7 @@ interface IFormatter {
 interface InputDataInterface {
   pattern: RegExp;
   caption: string;
+  autocomplete: string;
   errorMsg: string;
   type?: string;
   formatter?: IFormatter;
@@ -33,28 +34,33 @@ const inputs: InputsInterface = {
   name: {
     pattern: /^[a-zA-Z]{4,}(?: [a-zA-Z]{4,}){1,2}$/,
     caption: 'Name',
+    autocomplete: 'name',
     errorMsg: 'Please enter your full name',
   },
   phone: {
     pattern: /^\+[0-9]{10,13}$/,
     caption: 'Phone',
+    autocomplete: 'tel',
     errorMsg: 'Please use +1234567890 format',
   },
   email: {
     pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
     caption: 'Email',
+    autocomplete: 'email',
     errorMsg: 'Please use name@website.com format',
     type: 'email',
   },
   address: {
     pattern: /\d{1,5}\s(\b\w*\b\s){1,2}\w*\./,
     caption: 'Address',
+    autocomplete: 'street-address',
     errorMsg: 'Please enter correct address',
   },
   ccNumber: {
     className: 'ccnumber-input',
     pattern: /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14})/,
     caption: 'Card number',
+    autocomplete: 'cc-number',
     errorMsg: 'Please enter a valid visa/mastercard number',
     formatter: {
       deformat: (str) => str.replace(/[^0-9.]/g, ''),
@@ -68,12 +74,14 @@ const inputs: InputsInterface = {
   cardholder: {
     pattern: /^[a-zA-Z]{4,}(?: [a-zA-Z]{4,}){1,2}$/,
     caption: 'Card holder',
+    autocomplete: 'cc-name',
     errorMsg: 'Please enter your full name',
   },
   expDate: {
     className: 'expdate-input',
     pattern: /^(0[1-9]|1[0-2])+[0-9]{2}/,
     caption: 'Valid through',
+    autocomplete: 'cc-exp',
     errorMsg: 'Use MM/YY format',
     formatter: {
       deformat: (str) => str.replace(/[^0-9.]/g, ''),
@@ -88,6 +96,7 @@ const inputs: InputsInterface = {
     className: 'cvc-input',
     pattern: /^\d{3}$/,
     caption: 'CVC',
+    autocomplete: 'cc-csc',
     errorMsg: 'Enter 3 digits',
     type: 'password',
   },
@@ -139,7 +148,10 @@ export function Checkout(close: () => void): HTMLElement {
     textContent: 'Place order',
   });
 
-  form.append(title, shippingSubtitle, shippingInfo, ccSubtitle, ccInfo, placeOrder);
+  const closeButton = createSvg('cross-svg checkout-modal__close', 'cross');
+  closeButton.onclick = close;
+
+  form.append(title, shippingSubtitle, shippingInfo, ccSubtitle, ccInfo, placeOrder, closeButton);
   return form;
 }
 
@@ -160,7 +172,12 @@ const ValidatedInput = (data: InputDataInterface): { container: HTMLElement; inp
   const className = data.className ? `modal-input ${data.className}` : 'modal-input';
   const container = createElement('div', { className });
   const title = createElement('span', { textContent: data.caption, className: 'modal-input__caption' });
-  const input = createInput({ placeholder: data.caption, type, className: 'modal-input__field' });
+  const input = createInput({
+    placeholder: data.caption,
+    autocomplete: data.autocomplete,
+    type,
+    className: 'modal-input__field',
+  });
   input.setCustomValidity(data.errorMsg);
   const errorOutput = createElement('span', { className: 'modal-input__error' });
   input.oninput = () => {
