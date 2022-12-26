@@ -1,5 +1,5 @@
 import { Timer, createElement, createImage } from './utils';
-import { showToast } from './toast';
+import { toaster } from './toast';
 
 import newcomer from '../../assets/promos/newcomer.webp';
 import student from '../../assets/promos/student.webp';
@@ -30,7 +30,7 @@ export function PromoBanner(): HTMLElement {
         onclick: (e) => {
           navigator.clipboard
             .writeText(promoBanner.code)
-            .then(() => showToast('Code copied to clipboard!', 0, { left: e.pageX, top: e.pageY }));
+            .then(() => toaster.show('Code copied to clipboard!', 0, { left: e.pageX, top: e.pageY }));
         },
       }),
     );

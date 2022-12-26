@@ -4,7 +4,7 @@ import { IProduct } from '../testApi';
 import { IQueryParameters, queryParams } from '../router';
 import { onFilteredProducts, onQueryChange, untilReload } from '../events';
 import { createElement } from './utils';
-import { showToast } from './toast';
+import { toaster } from './toast';
 
 export function createFilters(products: IProduct[]) {
   const filtersContainer = document.createElement('div');
@@ -18,7 +18,7 @@ export function createFilters(products: IProduct[]) {
       onclick: (e) => {
         navigator.clipboard
           .writeText(window.location.href)
-          .then(() => showToast('Link copied to clipboard!', 0, { left: e.pageX, top: e.pageY }));
+          .then(() => toaster.show('Link copied to clipboard!', 0, { left: e.pageX, top: e.pageY }));
       },
     }),
     createElement('button', {
