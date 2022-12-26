@@ -3,6 +3,7 @@ import { getProducts, IProducts, IProduct } from '../testApi';
 import { CartAddButton } from '../components/CartAddButton';
 import { showError } from '../components/errors';
 import { Spinner } from '../components/Spinner';
+import { Slider } from '../components/imageSlider';
 
 export async function ProductDetails(container: HTMLElement, product: Partial<IQueryParameters>) {
   container.replaceChildren(Spinner());
@@ -55,16 +56,14 @@ function createNavigation(product: IProduct) {
 }
 
 function createProductDetails(product: IProduct) {
+  console.log(product);
   const productContainer = document.createElement('div');
   productContainer.classList.add('product-details__container');
   const imagesContainer = document.createElement('div');
   imagesContainer.classList.add('details__img-container');
-  const reverseImagesArr = [...product.images.reverse()];
-  reverseImagesArr.forEach((el) => {
-    const imgProduct = document.createElement('img');
-    imgProduct.src = el;
-    imagesContainer.append(imgProduct);
-  });
+
+  const sliderEl = new Slider(product.images);
+  imagesContainer.append(sliderEl.createSlider());
   if (product.discountPercentage !== 0) {
     const discountP = document.createElement('p');
     discountP.textContent = `- ${product.discountPercentage} %`;
