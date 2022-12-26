@@ -18,6 +18,8 @@
 .slider-vertical__img {
   width: 40px;
   height: 40px;
+  vertical-align: middle;
+  object-fit: contain;
   cursor: zoom-in;
 }
 
@@ -39,22 +41,4 @@
   height: auto;
   vertical-align: middle;
   object-fit: contain;
-}
-
-@keyframes fadeIn-opacity {
-  0% {opacity: 1;}
-  100% {opacity: 0;}
-}
-
-@keyframes fadeOut-opacity {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-}
-
-.hide-cover {
-  animation: fadeIn-opacity 0.3s ease-in 0.25s forwards;
-}
-
-.show-cover {
-  animation: fadeOut-opacity 0.3s ease-in 0.25s forwards;
 }

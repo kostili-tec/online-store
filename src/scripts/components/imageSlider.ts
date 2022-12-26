@@ -5,9 +5,11 @@ export class Slider {
   reverseImages: string[] | null = null;
   fullImage: HTMLImageElement | null = null;
   vetricalImages: Array<HTMLImageElement> = [];
-  verticalImgContainers: Array<HTMLElement> = [];
+  public verticalImgContainers: Array<HTMLElement> = [];
+  changeImageEvent: CallableFunction;
   constructor(imagesArr: string[]) {
     this.images = imagesArr;
+    this.changeImageEvent = this.eventVertical.bind(this);
   }
 
   createSlider(): HTMLElement {
@@ -30,24 +32,34 @@ export class Slider {
     this.verticalImgContainers[0].classList.add('slider-vertical__img-active');
 
     sliderContainer.append(verticalContainer, this.fullImage);
-    this.eventForVertical();
+    const eventFunc = this.eventVertical.bind(this);
+    verticalContainer.addEventListener('mouseover', eventFunc);
     return sliderContainer;
   }
+  async eventVertical(e: MouseEvent) {
+    const { target } = e;
+    if (target instanceof HTMLImageElement && target.classList.contains('slider-vertical__img')) {
+      const currentSrc = target.src;
+      this.removeActive(this.verticalImgContainers);
+      const parent = target.parentElement;
+      if (parent) {
+        parent.classList.add('slider-vertical__img-active');
+      }
+      if (this.fullImage) {
+        await this.changeImg(this.fullImage, currentSrc);
+      }
+    }
+  }
 
-  eventForVertical() {
-    this.vetricalImages.forEach((el) => {
-      el.addEventListener('mouseover', (e) => {
-        const { target } = e;
-        if (target instanceof HTMLImageElement && target.classList.contains('slider-vertical__img')) {
-          this.removeActive(this.verticalImgContainers);
-          const parent = target.parentElement;
-          if (parent) {
-            parent.classList.add('slider-vertical__img-active');
-          }
-          if (this.fullImage) this.fullImage.src = target.src;
-        }
-      });
-    });
+  async changeImg(img: HTMLImageElement, src: string) {
+    if (img.getAnimations().length !== 0) return;
+
+    const imgOpacityOn = img.animate([{ opacity: '1' }, { opacity: '0' }], { duration: 150, easing: 'ease-in' });
+
+    await new Promise((resolve) => (imgOpacityOn.onfinish = resolve));
+    img.src = src;
+    const imgOpacityOff = img.animate([{ opacity: '0' }, { opacity: '1' }], { duration: 150, easing: 'ease-in' });
+    await new Promise((resolve) => (imgOpacityOff.onfinish = resolve));
   }
 
   removeActive(array: Array<HTMLElement>) {
