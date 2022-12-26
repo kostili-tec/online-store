@@ -20,6 +20,7 @@ export function ProductCard(product: IProduct, grid: boolean): HTMLElement {
   productImage.className = 'product-card__image';
   productImage.src = product.thumbnail;
   productImage.alt = product.title;
+  productImage.loading = 'lazy';
   productImage.onclick = (e) => navigate('/product?=' + product.id, e);
 
   const productInfo = document.createElement('div');

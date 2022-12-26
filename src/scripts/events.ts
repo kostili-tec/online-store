@@ -18,11 +18,12 @@ class EventManager<DataType> {
     });
   }
   public subscribe(callback: TCallback<DataType>, once?: boolean): () => void {
-    const index = this.listners.push({ callback, once }) - 1;
-    return () => this.unsubscribe(index);
+    const listner = { callback, once };
+    this.listners.push(listner);
+    return () => this.unsubscribe(listner);
   }
-  public unsubscribe(index: number): void {
-    this.listners.splice(index, 1);
+  private unsubscribe(listner: IListner<DataType>): void {
+    this.listners = this.listners.filter((value) => value !== listner);
   }
 }
 
