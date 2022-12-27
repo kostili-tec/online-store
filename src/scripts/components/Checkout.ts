@@ -112,6 +112,7 @@ export function Checkout(close: () => void): HTMLElement {
     form.classList.add('modal-nonclosable');
     processOrder(3000).then(() => {
       store.cart.clear();
+      store.promos.clear();
       navigate('/');
       close();
     });

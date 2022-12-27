@@ -1,5 +1,6 @@
 import { IQueryParameters } from './router';
 import { IProduct } from './testApi';
+import { CartEventStatus } from './store/cart';
 
 type TCallback<DataType> = (data: DataType) => void;
 
@@ -17,7 +18,7 @@ class EventManager<DataType> {
       return !listner.once;
     });
   }
-  public subscribe(callback: TCallback<DataType>, once?: boolean): () => void {
+  public subscribe(callback: TCallback<DataType>, once = false): () => void {
     const listner = { callback, once };
     this.listners.push(listner);
     return () => this.unsubscribe(listner);
@@ -30,7 +31,8 @@ class EventManager<DataType> {
 export const onQueryChange = new EventManager<Partial<IQueryParameters>>();
 export const onFilteredProducts = new EventManager<IProduct[]>();
 export const onPageReload = new EventManager<string>();
-export const onCartChange = new EventManager<void>();
+export const onCartChange = new EventManager<CartEventStatus>();
+export const onPromoChange = new EventManager<void>();
 
 export function untilReload(unsubscribe: () => void): void {
   onPageReload.subscribe(unsubscribe, true);
