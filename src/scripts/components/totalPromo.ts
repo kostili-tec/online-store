@@ -4,6 +4,7 @@ import { Checkout } from './Checkout';
 import { showModal } from './modal';
 import sprite from '../../assets/svg/sprite.svg';
 import { onCartChange, untilReload } from '../events';
+import { checkPromo, IPromoCode } from '../testApi';
 
 export function createPromo(): HTMLElement {
   const totalContainer = createElement('div', { className: 'total-container' });
@@ -65,19 +66,6 @@ export function createPromo(): HTMLElement {
   return totalContainer;
 }
 
-/* вместо енума, какой нибудь объект чтоли, например 
-promoCodes = {
-  promo1: {
-    code: 'ts',
-    discount: 10,
-  }
-} */
-
-enum PromoCodes {
-  promo1 = 'rs',
-  promo2 = 'ts',
-}
-
 let countOfCodes = 0; // самый надежный счетчик
 
 /* надо куда-нибудь сохранить введенный промокод и добавить проверку, был ли он использован */
@@ -85,18 +73,18 @@ let countOfCodes = 0; // самый надежный счетчик
 const applyEvent = (e: MouseEvent, inputEl: HTMLInputElement, codesContaner: HTMLElement): void => {
   if (e.target instanceof HTMLElement) {
     const { target } = e;
-    const inputText = inputEl.value.toLowerCase().trim();
-    if (inputText === PromoCodes.promo1 || inputText === PromoCodes.promo2) {
+    const promoCode = checkPromo(inputEl.value.toUpperCase().trim());
+    if (promoCode) {
       target.textContent = 'Success';
       if (countOfCodes === 0) {
         const appliedTitle = createElement('span', {
           textContent: 'Applied codes: ',
           className: 'promo-applied__title',
         });
-        codesContaner.append(appliedTitle, createAppliedPromo(inputText, codesContaner));
+        codesContaner.append(appliedTitle, createAppliedPromo(promoCode, codesContaner));
         countOfCodes++;
       } else if (countOfCodes >= 1) {
-        codesContaner.append(createAppliedPromo(inputText, codesContaner));
+        codesContaner.append(createAppliedPromo(promoCode, codesContaner));
         countOfCodes++;
       }
     } else {
@@ -107,8 +95,11 @@ const applyEvent = (e: MouseEvent, inputEl: HTMLInputElement, codesContaner: HTM
   }
 };
 
-const createAppliedPromo = (promoName: string, codesContaner: HTMLElement): HTMLElement => {
-  const codeContainer = createElement('p', { textContent: `-10% ${promoName}`, className: 'promo-applied__code' });
+const createAppliedPromo = (promoCode: IPromoCode, codesContaner: HTMLElement): HTMLElement => {
+  const codeContainer = createElement('p', {
+    textContent: `-${promoCode.discount * 100}% ${promoCode.name}`,
+    className: 'promo-applied__code',
+  });
 
   const crossSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   crossSvg.classList.add('icon-svg', 'cross-svg', 'cross-svg__promo');
