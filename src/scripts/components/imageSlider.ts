@@ -67,6 +67,15 @@ export class Slider {
     this.horizontalImgContainers = this.verticalImgContainers.map((el) => el.cloneNode(true));
     horizontalContainer.append(...this.horizontalImgContainers);
 
+    const activeEl = this.getActiveEl(
+      this.horizontalImgContainers as Array<HTMLElement>,
+      'slider-vertical__img-active',
+    );
+    if (activeEl) {
+      activeEl.classList.remove('slider-vertical__img-active');
+      activeEl.classList.add('full-slider__horizontal-active');
+    }
+
     const eventFuncHorizontal = this.eventHorizontal.bind(this, fullSliderImage);
     horizontalContainer.addEventListener('mouseover', eventFuncHorizontal);
 
@@ -126,6 +135,10 @@ export class Slider {
         el.classList.remove('full-slider__horizontal-active');
       }
     });
+  }
+
+  getActiveEl(array: Array<HTMLElement>, className: string): HTMLElement | undefined {
+    return array.find((el) => el.classList.contains(`${className}`));
   }
 
   reverseImgs(): string[] {
