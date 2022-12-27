@@ -7,15 +7,21 @@ import { navigate } from '../router';
 import { createProductSpec } from './ProductDetails';
 import { createElement, createSvg } from '../components/utils';
 import { createPromo } from '../components/totalPromo';
+import { onCartChange, untilReload } from '../events';
 
 export async function Cart(container: HTMLElement): Promise<void> {
   const cartItems = store.cart.getItemsAll();
   if (cartItems.length === 0) return container.replaceChildren(showError('Your cart is empty', true));
+  untilReload(
+    onCartChange.subscribe(
+      (status) => status === 'cleared' && container.replaceChildren(showError('Your cart is empty', true)),
+    ),
+  );
 
   container.replaceChildren(Spinner());
   const data = await getProducts();
   if (!data) {
-    return container.replaceChildren(showError('Cannot get data', true));
+    return container.replaceChildren(showError('Cannot connect to server', true));
   }
   const products = data.products;
 
@@ -23,12 +29,18 @@ export async function Cart(container: HTMLElement): Promise<void> {
   const productsContainer = createElement('div', { className: 'cart-container__products' });
   const cardsContainer = createElement('div', { className: 'cart-container__products-container' });
 
-  cartItems.forEach((item) => {
-    const product = findProduct(products, item.id);
-    if (product) cardsContainer.append(cartProductCard(product));
-  });
+  const showPage = (pageNumber: number, perPage: number) => {
+    const slice = store.cart.getItemsAll().slice(pageNumber * perPage, pageNumber * perPage + perPage);
+    cardsContainer.replaceChildren(
+      ...slice.map((item) => {
+        const product = findProduct(products, item.id);
+        return (product && cartProductCard(product, item.count)) ?? '';
+      }),
+    );
+  };
+  showPage(0, 3);
 
-  const controllPagination = topBar();
+  const controllPagination = topBar(showPage);
   productsContainer.append(controllPagination, cardsContainer);
 
   const promo = createPromo();
@@ -37,7 +49,9 @@ export async function Cart(container: HTMLElement): Promise<void> {
   container.replaceChildren(cartContainer);
 }
 
-function topBar(): HTMLElement {
+function topBar(showPage: (pageNumber: number, perPage: number) => void): HTMLElement {
+  const state = { currentPage: 0, perPage: 3, maxPage: Math.ceil(store.cart.getItemsAll().length / 3) };
+
   const topBarContainer = createElement('div', { className: 'products__top-container' });
   const topTitle = createElement('h2', { textContent: 'Cart' });
 
@@ -46,12 +60,12 @@ function topBar(): HTMLElement {
   labelSelect.textContent = 'Items per page:';
   labelSelect.setAttribute('for', 'count-products');
   const customSelect = createElement('div', { className: 'custom-select' });
-  const itemsSelect = createElement('select', { id: 'count-products' });
+  const itemsSelect = createElement('select', { id: 'count-products' }) as HTMLSelectElement;
   itemsSelect.classList.add('top-container__control-select');
   const optionsValues = [3, 5, 10, 20];
-  optionsValues.forEach((el, ind) => {
+  optionsValues.forEach((el) => {
     const selectOption = document.createElement('option');
-    selectOption.value = String(ind);
+    selectOption.value = String(el);
     selectOption.textContent = String(el);
     itemsSelect.append(selectOption);
   });
@@ -63,14 +77,52 @@ function topBar(): HTMLElement {
   leftButton.append(createSvg('chevron-left', 'chevron-left'));
   const rightButton = createElement('button', { className: 'pagination-container__right' });
   rightButton.append(createSvg('chevron-right', 'chevron-left'));
-  const numberPageSpan = createElement('span', { textContent: '1' });
+  const numberPageSpan = createElement('span', { textContent: String(state.currentPage + 1) });
+
+  rightButton.onclick = () => {
+    if (state.currentPage < state.maxPage - 1) {
+      state.currentPage += 1;
+      numberPageSpan.textContent = String(state.currentPage + 1);
+      showPage(state.currentPage, state.perPage);
+    }
+  };
+  leftButton.onclick = () => {
+    if (state.currentPage > 0) {
+      state.currentPage -= 1;
+      numberPageSpan.textContent = String(state.currentPage + 1);
+      showPage(state.currentPage, state.perPage);
+    }
+  };
+
+  itemsSelect.oninput = () => {
+    state.perPage = Number(itemsSelect.value);
+    state.maxPage = Math.ceil(store.cart.getItemsAll().length / state.perPage);
+    if (state.currentPage >= state.maxPage) {
+      state.currentPage = state.maxPage - 1;
+      numberPageSpan.textContent = String(state.currentPage + 1);
+    }
+    showPage(state.currentPage, state.perPage);
+  };
+
+  untilReload(
+    onCartChange.subscribe((status) => {
+      if (status !== 'deleted') return;
+      state.maxPage = Math.ceil(store.cart.getItemsAll().length / state.perPage);
+      if (state.currentPage >= state.maxPage) {
+        state.currentPage = state.maxPage - 1;
+        numberPageSpan.textContent = String(state.currentPage + 1);
+      }
+      showPage(state.currentPage, state.perPage);
+    }),
+  );
+
   paginationContainer.append(leftButton, numberPageSpan, rightButton);
   controlContainer.append(labelSelect, customSelect, paginationContainer);
   topBarContainer.append(topTitle, controlContainer);
   return topBarContainer;
 }
 
-function cartProductCard(product: IProduct): HTMLElement {
+function cartProductCard(product: IProduct, count: number): HTMLElement {
   const container = document.createElement('div');
   container.classList.add('product-card', 'cart-product__card');
 
@@ -127,22 +179,32 @@ function cartProductCard(product: IProduct): HTMLElement {
   priceContainer.className = 'card-pricing';
   const discountedPrice = document.createElement('p');
   discountedPrice.classList.add('card-pricing__discounted', 'prices-container__discount');
-  discountedPrice.textContent = `${(product.price * ((100 - product.discountPercentage) / 100)).toFixed(2)} USD`;
   priceContainer.append(discountedPrice);
-  if (discountPercentage) {
-    const originalPrice = document.createElement('p');
-    originalPrice.classList.add('card-pricing__original', 'prices-container__original');
-    originalPrice.textContent = product.price.toFixed(2) + ' USD';
-    priceContainer.append(originalPrice);
-  }
-  const plusMinus = createPlusMinusButtons(product, container);
+
+  const originalPrice = document.createElement('p');
+  originalPrice.classList.add('card-pricing__original', 'prices-container__original');
+  if (discountPercentage) priceContainer.append(originalPrice);
+
+  const setPrice = (count: number): void => {
+    discountedPrice.textContent = `${(count * product.price * ((100 - product.discountPercentage) / 100)).toFixed(
+      2,
+    )} USD`;
+    originalPrice.textContent = (product.price * count).toFixed(2) + ' USD';
+  };
+  setPrice(count);
+
+  const plusMinus = createPlusMinusButtons(product, container, setPrice);
   buyOptions.append(removeButton, priceContainer, plusMinus);
 
   container.append(leftContainer, productInfo, buyOptions);
   return container;
 }
 
-function createPlusMinusButtons(product: IProduct, productCardEl: HTMLDivElement): HTMLElement {
+function createPlusMinusButtons(
+  product: IProduct,
+  productCardEl: HTMLDivElement,
+  setPrice: (count: number) => void,
+): HTMLElement {
   const buttonsContainer = document.createElement('div');
   buttonsContainer.classList.add('count-container');
   const minusButton = document.createElement('button');
@@ -155,13 +217,20 @@ function createPlusMinusButtons(product: IProduct, productCardEl: HTMLDivElement
   plusButton.textContent = '+';
 
   plusButton.addEventListener('click', () => {
-    store.cart.add(product.id, product.price);
-    countSpan.textContent = String(store.cart.getCountById(product.id));
+    const count = store.cart.getCountById(product.id);
+    if (count) {
+      if (count === product.stock) return;
+      store.cart.add(product.id, product.price);
+      countSpan.textContent = String(count + 1);
+      setPrice(count + 1);
+    }
   });
   minusButton.addEventListener('click', () => {
     store.cart.deleteOne(product.id);
-    if (store.cart.getCountById(product.id)) {
-      countSpan.textContent = String(store.cart.getCountById(product.id));
+    const count = store.cart.getCountById(product.id);
+    if (count) {
+      countSpan.textContent = count.toString();
+      setPrice(count);
     } else {
       productCardEl.remove();
     }

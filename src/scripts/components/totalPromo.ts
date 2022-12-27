@@ -3,6 +3,7 @@ import { store } from '../store';
 import { Checkout } from './Checkout';
 import { showModal } from './modal';
 import sprite from '../../assets/svg/sprite.svg';
+import { onCartChange, untilReload } from '../events';
 
 export function createPromo(): HTMLElement {
   const totalContainer = createElement('div', { className: 'total-container' });
@@ -10,15 +11,14 @@ export function createPromo(): HTMLElement {
   const titleOrder = createElement('h4', { className: 'total-container__title', textContent: 'Order Summary' });
   const products = createElement('p', { className: 'total-container__producs', textContent: 'Products: ' });
   const productsCount = createElement('span', { textContent: `${store.cart.getCountAll()}` });
+  untilReload(onCartChange.subscribe(() => (productsCount.textContent = `${store.cart.getCountAll()}`)));
   products.append(productsCount);
 
   const priceToFixed = store.cart.getPriceAll().toFixed(2);
-  const totalFull = createElement('p', { textContent: 'Full price: ', className: 'total-container__price-full' });
-  const totalFullSum = createElement('span', { textContent: `${priceToFixed} USD` }); // цена без скидок
-  totalFull.append(totalFullSum);
-  const totalDiscount = createElement('p', { textContent: 'Discount: ', className: 'total-container__price-disc' });
-  const totalDiscountSum = createElement('span', { textContent: `sum of discount USD` }); // только сумма скидки
-  totalDiscount.append(totalDiscountSum);
+  const subTotal = createElement('p', { textContent: 'Subtotal price: ', className: 'total-container__price-full' });
+  const subTotalSum = createElement('span', { textContent: `${priceToFixed} USD` }); // цена без скидок
+  untilReload(onCartChange.subscribe(() => (subTotalSum.textContent = store.cart.getPriceAll().toFixed(2))));
+  subTotal.append(subTotalSum);
 
   const promoInputContainer = createElement('div', { className: 'total-container__promo-container' });
   const aplliedPromos = createElement('div', { className: 'total-container__promo-applied' });
@@ -56,8 +56,7 @@ export function createPromo(): HTMLElement {
   totalContainer.append(
     titleOrder,
     products,
-    totalFull,
-    totalDiscount,
+    subTotal,
     promoInputContainer,
     aplliedPromos,
     totalOrderContainer,

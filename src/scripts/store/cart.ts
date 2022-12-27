@@ -1,4 +1,12 @@
 import { onCartChange } from '../events';
+
+export enum CartEventStatus {
+  added = 'added',
+  deleted = 'deleted',
+  updated = 'updated',
+  cleared = 'cleared',
+}
+
 export interface ICartItem {
   id: number;
   count: number;
@@ -32,9 +40,14 @@ export class Cart {
 
   public add(id: number, price: number): void {
     const cartItem = this.cartItems.find((item) => item.id === id);
-    if (cartItem) cartItem.count += 1;
-    else this.cartItems.push({ id, price, count: 1 });
-    onCartChange.emit();
+    if (cartItem) {
+      cartItem.count += 1;
+      onCartChange.emit(CartEventStatus.updated);
+    } else {
+      const newItem = { id, price, count: 1 };
+      this.cartItems.push(newItem);
+      onCartChange.emit(CartEventStatus.added);
+    }
   }
 
   public deleteOne(id: number): void {
@@ -42,18 +55,19 @@ export class Cart {
     if (cartItem) {
       cartItem.count -= 1;
       if (cartItem.count === 0) this.delete(id);
-      else onCartChange.emit();
+      else onCartChange.emit(CartEventStatus.updated);
     }
   }
 
   public delete(id: number): void {
     this.cartItems = this.cartItems.filter((item) => item.id !== id);
-    onCartChange.emit();
+    if (this.cartItems.length === 0) onCartChange.emit(CartEventStatus.cleared);
+    else onCartChange.emit(CartEventStatus.deleted);
   }
 
   public clear(): void {
     this.cartItems = [];
-    onCartChange.emit();
+    onCartChange.emit(CartEventStatus.cleared);
   }
 
   public getCountById(id: number): number | null {
