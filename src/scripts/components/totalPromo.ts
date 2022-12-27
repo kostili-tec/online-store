@@ -3,7 +3,7 @@ import { store } from '../store';
 import { Checkout } from './Checkout';
 import { showModal } from './modal';
 import sprite from '../../assets/svg/sprite.svg';
-import { onCartChange, untilReload } from '../events';
+import { onCartChange, onPromoChange, untilReload } from '../events';
 import { checkPromo, IPromoCode } from '../testApi';
 
 export function createPromo(): HTMLElement {
@@ -15,14 +15,19 @@ export function createPromo(): HTMLElement {
   untilReload(onCartChange.subscribe(() => (productsCount.textContent = `${store.cart.getCountAll()}`)));
   products.append(productsCount);
 
-  const priceToFixed = store.cart.getPriceAll().toFixed(2);
+  let cartTotal = store.cart.getPriceAll();
   const subTotal = createElement('p', { textContent: 'Subtotal price: ', className: 'total-container__price-full' });
-  const subTotalSum = createElement('span', { textContent: `${priceToFixed} USD` }); // цена без скидок
-  untilReload(onCartChange.subscribe(() => (subTotalSum.textContent = store.cart.getPriceAll().toFixed(2))));
+  const subTotalSum = createElement('span', { textContent: `${cartTotal.toFixed(2)} USD` }); // цена без скидок
   subTotal.append(subTotalSum);
 
   const promoInputContainer = createElement('div', { className: 'total-container__promo-container' });
   const aplliedPromos = createElement('div', { className: 'total-container__promo-applied' });
+  if (store.promos.getCount()) {
+    aplliedPromos.append(
+      AppliedTitle(),
+      ...store.promos.getAll().map((code) => createAppliedPromo(code, aplliedPromos)),
+    );
+  }
 
   const promoInput = document.createElement('input');
   promoInput.placeholder = 'Apply promo code';
@@ -48,11 +53,27 @@ export function createPromo(): HTMLElement {
     textContent: 'Checkout',
   });
   checkoutButton.addEventListener('click', () => showModal(Checkout));
-  const finishSum = createElement('h3', {
+
+  const totalSum = createElement('h3', {
     className: 'card-pricing__discounted prices-container__discount',
-    textContent: `${priceToFixed} USD`, // итоговая цена со всеми скидками
+    textContent: `${(cartTotal * (1 - store.promos.getDiscountTotal())).toFixed(2)} USD`, // итоговая цена со всеми скидками
   });
-  buyContainer.append(checkoutButton, finishSum);
+
+  buyContainer.append(checkoutButton, totalSum);
+
+  untilReload(
+    onCartChange.subscribe(() => {
+      cartTotal = store.cart.getPriceAll();
+      subTotalSum.textContent = cartTotal.toFixed(2);
+      totalSum.textContent = `${(cartTotal * (1 - store.promos.getDiscountTotal())).toFixed(2)} USD`;
+    }),
+  );
+
+  untilReload(
+    onPromoChange.subscribe(
+      () => (totalSum.textContent = `${(cartTotal * (1 - store.promos.getDiscountTotal())).toFixed(2)} USD`),
+    ),
+  );
 
   totalContainer.append(
     titleOrder,
@@ -66,33 +87,29 @@ export function createPromo(): HTMLElement {
   return totalContainer;
 }
 
-let countOfCodes = 0; // самый надежный счетчик
-
-/* надо куда-нибудь сохранить введенный промокод и добавить проверку, был ли он использован */
-
 const applyEvent = (e: MouseEvent, inputEl: HTMLInputElement, codesContaner: HTMLElement): void => {
   if (e.target instanceof HTMLElement) {
     const { target } = e;
     const promoCode = checkPromo(inputEl.value.toUpperCase().trim());
     if (promoCode) {
-      target.textContent = 'Success';
-      if (countOfCodes === 0) {
-        const appliedTitle = createElement('span', {
-          textContent: 'Applied codes: ',
-          className: 'promo-applied__title',
-        });
-        codesContaner.append(appliedTitle, createAppliedPromo(promoCode, codesContaner));
-        countOfCodes++;
-      } else if (countOfCodes >= 1) {
+      const isAdded = store.promos.add(promoCode);
+      if (isAdded) {
+        target.textContent = 'Success';
+        if (store.promos.getCount() === 1) codesContaner.append(AppliedTitle());
         codesContaner.append(createAppliedPromo(promoCode, codesContaner));
-        countOfCodes++;
-      }
-    } else {
-      target.textContent = 'Wrong code';
-    }
+      } else target.textContent = 'Already applied';
+    } else target.textContent = 'Wrong code';
+
     inputEl.value = '';
     setTimeout(() => (target.textContent = 'Apply now'), 850);
   }
+};
+
+const AppliedTitle = (): HTMLElement => {
+  return createElement('span', {
+    textContent: 'Applied codes: ',
+    className: 'promo-applied__title',
+  });
 };
 
 const createAppliedPromo = (promoCode: IPromoCode, codesContaner: HTMLElement): HTMLElement => {
@@ -108,19 +125,16 @@ const createAppliedPromo = (promoCode: IPromoCode, codesContaner: HTMLElement): 
   crossSvg.appendChild(useSvg);
   const removeButton = createElement('button', { className: 'prodcut-card__remove-button promo__remove-button' });
   removeButton.appendChild(crossSvg);
-  removeButton.addEventListener('click', () => deleteAppliedPromo(codeContainer, codesContaner));
+  removeButton.addEventListener('click', () => deleteAppliedPromo(promoCode, codeContainer, codesContaner));
   codeContainer.appendChild(removeButton);
   return codeContainer;
 };
 
-const deleteAppliedPromo = (parentEl: HTMLElement, codesContaner: HTMLElement): void => {
-  if (countOfCodes > 1) {
-    countOfCodes--;
-    parentEl.remove();
-  } else if (countOfCodes <= 1) {
-    countOfCodes--;
-    codesContaner.replaceChildren();
-  }
+const deleteAppliedPromo = (promoCode: IPromoCode, element: HTMLElement, container: HTMLElement): void => {
+  store.promos.remove(promoCode.name);
+  if (store.promos.getCount() > 0) {
+    element.remove();
+  } else container.replaceChildren();
 };
 
 function createDeliveryDate(): string {
