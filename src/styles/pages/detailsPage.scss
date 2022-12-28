@@ -29,16 +29,12 @@
 
 .details__img-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: nowrap;
   flex: 1;
   gap: 2rem;
   padding: 1rem;
   position: relative;
-  img {
-    max-width: 100%;
-    min-width: 130px;
-    border-radius: 12px;
-  }
 }
 
 .img-container__discount {
@@ -52,7 +48,7 @@
   line-height: 16px;
   background-color: #f4f8ec;
   color: #6a983c;
-  transform: translate(26px, 20px);
+  transform: translate(90px, 20px);
 }
 
 .details__info-container {
