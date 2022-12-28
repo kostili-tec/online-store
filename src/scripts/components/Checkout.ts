@@ -51,14 +51,14 @@ const inputs: InputsInterface = {
     type: 'email',
   },
   address: {
-    pattern: /\d{1,5}\s(\b\w*\b\s){1,2}\w*\./,
+    pattern: /^.{5,}(\s\S{5,}){2,}$/, //3 or more words with 5 or more chars
     caption: 'Address',
     autocomplete: 'street-address',
     errorMsg: 'Please enter correct address',
   },
   ccNumber: {
     className: 'ccnumber-input',
-    pattern: /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14})/,
+    pattern: /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13})/,
     caption: 'Card number',
     autocomplete: 'cc-number',
     errorMsg: 'Please enter a valid visa/mastercard number',
@@ -131,11 +131,6 @@ export function Checkout(close: () => void): HTMLElement {
 
   const ccSubtitle = createSubtitle('credit card', 2, 2);
   const ccInfo = createElement('div', { className: 'checkout-modal__inputs ccard-inputs' });
-  const ccLogos = createElement('div', { className: 'ccard-logos' });
-  ccLogos.append(
-    createElement('div', { className: 'ccard-logos__visa' }),
-    createElement('div', { className: 'ccard-logos__master' }),
-  );
   ccInfo.append(
     createCCNumber(inputs.ccNumber),
     createValidatedInput(inputs.cardholder),
@@ -204,10 +199,12 @@ const createCCNumber = (data: InputDataInterface): DocumentFragment => {
   ccLogos.append(
     createElement('div', { className: 'ccard-logos__visa' }),
     createElement('div', { className: 'ccard-logos__master' }),
+    createElement('div', { className: 'ccard-logos__amex' }),
   );
   input.addEventListener('input', () => {
     if (input.value.startsWith('5')) ccLogos.className = 'ccard-logos master-active';
     else if (input.value.startsWith('4')) ccLogos.className = 'ccard-logos visa-active';
+    else if (input.value.startsWith('3')) ccLogos.className = 'ccard-logos amex-active';
     else ccLogos.className = 'ccard-logos';
   });
   const fragment = document.createDocumentFragment();
