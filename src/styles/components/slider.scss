@@ -60,7 +60,20 @@
   right: 0;
   border: none;
   background: none;
+  transform: translate(-5px, 10px);  
   cursor: pointer;
+  &:hover {
+    > .cross-svg__slider {
+      fill: $color-black-headers;
+    }
+  }
+}
+
+.cross-svg__slider {
+  width: 25px;
+  height: 25px;
+  fill: $color-c1c;
+  transition: ease-in 0.2s;
 }
 
 .full-slider__meida-container {
@@ -76,6 +89,7 @@
   border: none;
   background: none;
   width: 150px;
+  height: 500px;
   cursor: pointer;
   .button-chevron__svg {
     width: 60px;
@@ -94,6 +108,8 @@
 
 .full-slider__main-image {
   width: 55%;
+  max-height: 700px;
+  object-fit: contain;
 }
 
 .full-slider__horizontal {

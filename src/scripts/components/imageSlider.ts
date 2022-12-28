@@ -1,5 +1,10 @@
 import { createElement, createSvg } from './utils';
 
+enum SliderButtons {
+  left,
+  right,
+}
+
 export class Slider {
   images: string[];
   reverseImages: string[] | null = null;
@@ -7,12 +12,10 @@ export class Slider {
   vetricalImages: Array<HTMLImageElement> = [];
   verticalImgContainers: Array<HTMLElement> = [];
   horizontalImgContainers: Array<Node> = [];
-  changeImageEvent: CallableFunction;
-  count: number;
+  numberActive: number;
   constructor(imagesArr: string[]) {
     this.images = imagesArr;
-    this.changeImageEvent = this.eventVertical.bind(this);
-    this.count = 0;
+    this.numberActive = 0;
   }
 
   createSlider(): HTMLElement {
@@ -33,8 +36,6 @@ export class Slider {
     });
     verticalContainer.append(...this.verticalImgContainers);
     this.verticalImgContainers[0].classList.add('slider-vertical__img-active');
-    this.count = this.verticalImgContainers.length - 1;
-    console.log(this.count);
 
     sliderContainer.append(verticalContainer, this.fullImage);
     const eventFunc = this.eventVertical.bind(this);
@@ -47,7 +48,7 @@ export class Slider {
   createFullSlider() {
     const fullSliderContainer = createElement('div', { className: 'full-slider__container' });
     const closeButton = createElement('button', { className: 'full-slider__close-button' });
-    const closeSvg = createSvg('cross-svg', 'cross');
+    const closeSvg = createSvg('cross-svg__slider', 'cross');
     closeButton.appendChild(closeSvg);
     closeButton.addEventListener('click', () => fullSliderContainer.remove());
     const mediaVievConainer = createElement('div', { className: 'full-slider__meida-container' });
@@ -61,6 +62,8 @@ export class Slider {
     if (this.fullImage) {
       fullSliderImage.src = this.fullImage.src;
     }
+    const currentActiveIndex = this.getActiveElIndex(this.verticalImgContainers, 'slider-vertical__img-active');
+    if (currentActiveIndex) this.numberActive = currentActiveIndex;
     fullSliderImage.classList.add('full-slider__main-image');
 
     const horizontalContainer = createElement('div', { className: 'full-slider__horizontal' });
@@ -78,6 +81,9 @@ export class Slider {
 
     const eventFuncHorizontal = this.eventHorizontal.bind(this, fullSliderImage);
     horizontalContainer.addEventListener('mouseover', eventFuncHorizontal);
+
+    leftButton.addEventListener('click', this.eventForButtons.bind(this, fullSliderImage, SliderButtons.left));
+    rightButton.addEventListener('click', this.eventForButtons.bind(this, fullSliderImage, SliderButtons.right));
 
     mediaVievConainer.append(leftButton, fullSliderImage, rightButton);
     fullSliderContainer.append(closeButton, mediaVievConainer, horizontalContainer);
@@ -112,7 +118,27 @@ export class Slider {
       if (fullImg && fullImg.src !== currentSrc) {
         await this.changeImg(fullImg, currentSrc);
       }
+      const activeElIndex = this.getActiveElIndex(
+        this.horizontalImgContainers as Array<HTMLElement>,
+        'full-slider__horizontal-active',
+      );
+      if (activeElIndex) this.numberActive = activeElIndex;
     }
+  }
+
+  async eventForButtons(fullImg: HTMLImageElement, leftOrRight: SliderButtons) {
+    if (leftOrRight === SliderButtons.left) {
+      this.numberActive--;
+      this.numberActive < 0 ? (this.numberActive = this.horizontalImgContainers.length - 1) : this.numberActive;
+    } else if (leftOrRight === SliderButtons.right) {
+      this.numberActive++;
+      this.numberActive > this.horizontalImgContainers.length - 1 ? (this.numberActive = 0) : this.numberActive;
+    }
+    this.removeActive(this.horizontalImgContainers as Array<HTMLElement>);
+    (this.horizontalImgContainers as Array<HTMLElement>)[this.numberActive].classList.add(
+      'full-slider__horizontal-active',
+    );
+    await this.changeImg(fullImg, this.vetricalImages[this.numberActive].src);
   }
 
   async changeImg(img: HTMLImageElement, src: string) {
@@ -139,6 +165,15 @@ export class Slider {
 
   getActiveEl(array: Array<HTMLElement>, className: string): HTMLElement | undefined {
     return array.find((el) => el.classList.contains(`${className}`));
+  }
+
+  getActiveElIndex(array: Array<HTMLElement>, className: string) {
+    const activeElement = this.getActiveEl(array, className);
+    if (activeElement) {
+      return array.indexOf(activeElement, 0);
+    } else {
+      return undefined;
+    }
   }
 
   reverseImgs(): string[] {
