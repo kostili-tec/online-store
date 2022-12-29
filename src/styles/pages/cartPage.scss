@@ -149,6 +149,15 @@
     height: 132px;
   }
 }
+.product-card__number {
+  @include fontPoppinsSemiBold;
+  font-size: 16px;
+  color: $color-c1b;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-18px, 0px);
+}
 
 .prodcut-card__remove-button {
   height: 16px;

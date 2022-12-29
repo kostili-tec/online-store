@@ -32,9 +32,10 @@ export async function Cart(container: HTMLElement): Promise<void> {
   const showPage = (pageNumber: number, perPage: number) => {
     const slice = store.cart.getItemsAll().slice(pageNumber * perPage, pageNumber * perPage + perPage);
     cardsContainer.replaceChildren(
-      ...slice.map((item) => {
+      ...slice.map((item, index) => {
         const product = findProduct(products, item.id);
-        return (product && cartProductCard(product, item.count)) ?? '';
+        const productNumber = index + perPage * pageNumber + 1;
+        return (product && cartProductCard(product, item.count, productNumber)) ?? '';
       }),
     );
   };
@@ -122,10 +123,12 @@ function topBar(showPage: (pageNumber: number, perPage: number) => void): HTMLEl
   return topBarContainer;
 }
 
-function cartProductCard(product: IProduct, count: number): HTMLElement {
+function cartProductCard(product: IProduct, count: number, index: number): HTMLElement {
   const container = document.createElement('div');
   container.classList.add('product-card', 'cart-product__card');
 
+  const numberProduct = createElement('span', { className: 'product-card__number', textContent: `${index}` });
+  container.append(numberProduct);
   const discountPercentage = Math.round(product.discountPercentage);
   if (discountPercentage) {
     const discount = document.createElement('span');
