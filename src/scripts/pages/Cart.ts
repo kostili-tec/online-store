@@ -170,7 +170,8 @@ function cartProductCard(product: IProduct, count: number): HTMLElement {
   rating.title = product.rating.toString();
   const brand = createProductSpec('Brand', product.brand);
   const category = createProductSpec('Category', product.category);
-  productInfo.append(title, brand, category, rating);
+  const inStock = createProductSpec('Stock', product.stock);
+  productInfo.append(title, brand, category, inStock, rating);
 
   const buyOptions = document.createElement('div');
   buyOptions.className = 'product-card__options';
