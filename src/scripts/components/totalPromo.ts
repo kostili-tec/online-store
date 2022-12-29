@@ -97,11 +97,21 @@ const applyEvent = (e: MouseEvent, inputEl: HTMLInputElement, codesContaner: HTM
         target.textContent = 'Success';
         if (store.promos.getCount() === 1) codesContaner.append(AppliedTitle());
         codesContaner.append(createAppliedPromo(promoCode, codesContaner));
-      } else target.textContent = 'Already applied';
-    } else target.textContent = 'Wrong code';
-
+        target.classList.add('promo-button__approved');
+      } else {
+        target.textContent = 'Already applied';
+        target.classList.add('promo-button__disapproved');
+      }
+    } else {
+      target.textContent = 'Wrong code';
+      target.classList.add('promo-button__disapproved');
+    }
     inputEl.value = '';
-    setTimeout(() => (target.textContent = 'Apply now'), 850);
+    setTimeout(() => {
+      target.textContent = 'Apply now';
+      if (target.classList.contains('promo-button__disapproved')) target.classList.remove('promo-button__disapproved');
+      if (target.classList.contains('promo-button__approved')) target.classList.remove('promo-button__approved');
+    }, 850);
   }
 };
 

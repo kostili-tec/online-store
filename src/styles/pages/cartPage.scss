@@ -260,14 +260,29 @@
     font-size: 15px;
     line-height: 22px;
     transform: translate(-1rem, 9px);
-    transition: ease-in 0.2s;
+    transition: ease-in 0.1s;
     color: $color-c1b;
     cursor: pointer;
     &:hover {
       color: $color-black-headers;
     }
   }
+  
+  .promo-button__approved {
+    color: $color-c2a;
+    &:hover {
+      color: $color-c2a;
+    }
+  }
+
+  .promo-button__disapproved {
+    color: $color-alert;
+    &:hover {
+      color: $color-alert;
+    }
+  }
 }
+
 .total-container__promo-applied {
   margin: 12px 0 6px;
   display: flex;
