@@ -3,17 +3,17 @@
   font-size: 12px;
   display: flex;
   justify-content: space-between;
-  &__sort {
-    padding: 6px;
-    border: 1px solid $color-c1d;
-    border-radius: 12px;
-    background-color: $color-c1h;
+  .products-topbar__sort {
+    @include fontPoppinsMedium;
+    height: 18px;
   }
   &__view {
     display: flex;
     gap: 24px;
+    align-items: center;
   }
 }
+
 
 .topbar-view-option {
   appearance: none;

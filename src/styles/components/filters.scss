@@ -18,10 +18,10 @@
   justify-content: flex-start;
   gap: 10px;
   button {
-    @include fontOpenSans;
+    @include fontPoppinsMedium;
     border: 1px solid $color-c1d;
-    height: 25px;
-    font-size: .8em;
+    height: 30px;
+    font-size: 1rem;
   }
 }
 
@@ -84,7 +84,11 @@
   input:checked ~ .checkmark::after {
     display: block;
   }
+  &::first-letter {
+    text-transform: uppercase;
+  }
 }
+
 .label__span-count {
   margin-right: 1rem;
   font-size: 11px;
