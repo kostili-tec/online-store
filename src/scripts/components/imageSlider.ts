@@ -22,10 +22,12 @@ export class Slider {
     this.reverseImages = [...this.reverseImgs()];
     const sliderContainer = createElement('div', { className: 'slider-container' });
     const verticalContainer = createElement('div', { className: 'slider-vertical' });
+    const fullImageContainer = createElement('div');
 
     this.fullImage = new Image();
     this.fullImage.classList.add('slider__main-image');
     this.fullImage.src = this.reverseImages[0];
+    fullImageContainer.append(this.fullImage);
 
     this.createVerticalImages(this.reverseImages);
     this.verticalImgContainers = this.vetricalImages.map((el) => {
@@ -37,7 +39,7 @@ export class Slider {
     verticalContainer.append(...this.verticalImgContainers);
     this.verticalImgContainers[0].classList.add('slider-vertical__img-active');
 
-    sliderContainer.append(verticalContainer, this.fullImage);
+    sliderContainer.append(verticalContainer, fullImageContainer);
     const eventFunc = this.eventVertical.bind(this);
     const fullSlider = this.createFullSlider.bind(this);
     verticalContainer.addEventListener('mouseover', eventFunc);
@@ -62,6 +64,8 @@ export class Slider {
     if (this.fullImage) {
       fullSliderImage.src = this.fullImage.src;
     }
+    const fullImageContainer = createElement('div', { className: 'full-slider__img-container' });
+    fullImageContainer.append(fullSliderImage);
     const currentActiveIndex = this.getActiveElIndex(this.verticalImgContainers, 'slider-vertical__img-active');
     if (currentActiveIndex) this.numberActive = currentActiveIndex;
     fullSliderImage.classList.add('full-slider__main-image');
@@ -85,7 +89,7 @@ export class Slider {
     leftButton.addEventListener('click', this.eventForButtons.bind(this, fullSliderImage, SliderButtons.left));
     rightButton.addEventListener('click', this.eventForButtons.bind(this, fullSliderImage, SliderButtons.right));
 
-    mediaVievConainer.append(leftButton, fullSliderImage, rightButton);
+    mediaVievConainer.append(leftButton, fullImageContainer, rightButton);
     fullSliderContainer.append(closeButton, mediaVievConainer, horizontalContainer);
 
     return fullSliderContainer;
