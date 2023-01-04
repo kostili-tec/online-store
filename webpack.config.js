@@ -27,6 +27,7 @@ const config = {
   plugins: [
     new HtmlWebpackPlugin({
       template: 'index.html',
+      favicon: './src/assets/ico/favicon.ico',
     }),
     new ESLintPlugin({
       extensions: ['.ts', '.js'],
