@@ -54,12 +54,12 @@ export function ProductCard(product: IProduct, grid: boolean): HTMLElement {
   priceContainer.className = 'card-pricing';
   const discountedPrice = document.createElement('p');
   discountedPrice.className = 'card-pricing__discounted';
-  discountedPrice.textContent = `${(product.price * ((100 - product.discountPercentage) / 100)).toFixed(2)} USD`;
+  discountedPrice.textContent = `$ ${(product.price * ((100 - product.discountPercentage) / 100)).toFixed(2)}`;
   priceContainer.append(discountedPrice);
   if (discountPercentage) {
     const originalPrice = document.createElement('p');
     originalPrice.className = 'card-pricing__original';
-    originalPrice.textContent = product.price.toFixed(2) + ' USD';
+    originalPrice.textContent = '$ ' + product.price.toFixed(2);
     priceContainer.append(originalPrice);
   }
 

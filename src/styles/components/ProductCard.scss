@@ -6,11 +6,14 @@
   padding: 16px;
   position: relative;
   font-size: 14px;
+  flex: 1;
   &.card-grid{
     font-size: 12px;
-    display: block;
+    gap: 0;
+    flex-direction: column;
+    flex: 0 0 268px;
     width: 268px;
-    height: 360px;
+    height: 380px;
     .card-info__desc {
       white-space: nowrap;
       overflow: hidden;
@@ -54,11 +57,17 @@
     font-size: 1.25em;
     margin: 10px 0 4px;
     cursor: pointer;
+    &::first-letter {
+      text-transform: uppercase;
+    }
   }
   &__desc {
     @include fontOpenSans;
     margin: 0;
     color: $color-c1b;
+    &::first-letter {
+      text-transform: uppercase;
+    }
   }
   &__rating {
     mask-image: url(../assets/svg/rating-star.svg);
@@ -83,6 +92,7 @@
     margin: 0;
   }
   &__original {
+    @include fontPoppinsMedium;
     margin: 0;
     color: $color-c1c;
     text-decoration: line-through;

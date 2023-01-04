@@ -5,8 +5,11 @@ export function ProductsTopbar(): HTMLElement {
   const container = document.createElement('div');
   container.className = 'products-topbar';
 
+  const selectContainer = document.createElement('div');
+  selectContainer.classList.add('custom-select');
+
   const select = document.createElement('select');
-  select.className = 'products-sort';
+  select.classList.add('products-topbar__sort', 'top-container__control-select');
   [
     { name: 'Sort by rating ↓', val: 'rating-desc' },
     { name: 'Sort by rating ↑', val: 'rating-asc' },
@@ -25,6 +28,7 @@ export function ProductsTopbar(): HTMLElement {
     const target = e.target as HTMLSelectElement;
     queryParams.set('sort', target.value);
   };
+  selectContainer.append(select);
 
   const viewContainer = document.createElement('div');
   viewContainer.className = 'products-topbar__view';
@@ -57,6 +61,6 @@ export function ProductsTopbar(): HTMLElement {
 
   viewContainer.append(gridview, listView, productCount);
 
-  container.append(select, viewContainer);
+  container.append(selectContainer, viewContainer);
   return container;
 }
