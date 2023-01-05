@@ -45,7 +45,7 @@ const promoCodes: IPromoCode[] = [
 
 export async function getProducts() {
   try {
-    const res: Response = await fetch('https://dummyjson.com/products?limit=100');
+    const res: Response = await fetch('./data/products.json');
     const data: IProducts = await res.json();
     return data;
   } catch {
