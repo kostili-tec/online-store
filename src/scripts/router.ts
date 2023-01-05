@@ -26,23 +26,26 @@ interface IRoutes {
   };
 }
 
-const routes: IRoutes = {
-  page404: {
-    name: 'Error 404',
-    page: Page404,
+const router: { routes: IRoutes; current: string } = {
+  routes: {
+    page404: {
+      name: 'Error 404',
+      page: Page404,
+    },
+    '/': {
+      name: 'Home',
+      page: Home,
+    },
+    '/product': {
+      name: 'Product details',
+      page: ProductDetails,
+    },
+    '/cart': {
+      name: 'Cart',
+      page: Cart,
+    },
   },
-  '/': {
-    name: 'Home',
-    page: Home,
-  },
-  '/product': {
-    name: 'Product details',
-    page: ProductDetails,
-  },
-  '/cart': {
-    name: 'Cart',
-    page: Cart,
-  },
+  current: '',
 };
 
 class SearchParams {
@@ -104,8 +107,15 @@ export const navigate = (href: string, e?: Event) => {
 const handleLocation = () => {
   const path = window.location.pathname;
   const query = new URLSearchParams(window.location.search);
-  const route = routes[path] || routes['page404'];
-  onPageReload.emit(route.name);
+  if (path === router.current) {
+    onQueryChange.emit(Object.fromEntries(query));
+    return;
+  }
+
+  router.current = router.routes[path] ? path : 'page404';
+  const route = router.routes[router.current];
+  onPageReload.emit(router.current);
+
   route.page(root, Object.fromEntries(query));
   document.title = `Online Store - ${route.name}`;
 };
