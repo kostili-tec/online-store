@@ -176,6 +176,14 @@ function createNoUiSlider(
     }),
   );
 
+  untilReload(
+    onFilteredProducts.subscribe((products) => {
+      const minVal = getMinValue(rangeName as keyof IProduct, products);
+      const maxVal = getMaxValue(rangeName as keyof IProduct, products);
+      (snapSlider as noUiSlider.target).noUiSlider?.set([minVal, maxVal], false);
+    }),
+  );
+
   (snapSlider as noUiSlider.target).noUiSlider?.on('update', (values, handle) => {
     const roundVal = Math.round(Number(values[handle])).toString();
     inputs[handle].value = roundVal;
