@@ -1,4 +1,4 @@
-import { onFilteredProducts, untilReload } from '../events';
+import { onFilteredProducts, onQueryChange, untilReload } from '../events';
 import { queryParams } from '../router';
 
 export function ProductsTopbar(): HTMLElement {
@@ -10,14 +10,15 @@ export function ProductsTopbar(): HTMLElement {
 
   const select = document.createElement('select');
   select.classList.add('products-topbar__sort', 'top-container__control-select');
-  [
+  const options = [
     { name: 'Sort by rating ↓', val: 'rating-desc' },
     { name: 'Sort by rating ↑', val: 'rating-asc' },
     { name: 'Sort by price ↓', val: 'price-desc' },
     { name: 'Sort by price ↑', val: 'price-asc' },
     { name: 'Sort by discount ↓', val: 'discount-desc' },
     { name: 'Sort by discount ↑', val: 'discount-asc' },
-  ].forEach((option) => {
+  ];
+  options.forEach((option) => {
     const sortOption = document.createElement('option');
     sortOption.textContent = option.name;
     sortOption.value = option.val;
@@ -47,6 +48,15 @@ export function ProductsTopbar(): HTMLElement {
   listView.oninput = () => queryParams.set('view', 'list');
   if (queryParams.get('view') === 'list') listView.checked = true;
   else gridview.checked = true;
+
+  untilReload(
+    onQueryChange.subscribe((query) => {
+      if (query.view === 'list') listView.checked = true;
+      else gridview.checked = true;
+      const index = options.findIndex((option) => option.val === query.sort);
+      select.selectedIndex = index === -1 ? 0 : index;
+    }),
+  );
 
   const productCount = document.createElement('div');
   const tag = document.createElement('span');

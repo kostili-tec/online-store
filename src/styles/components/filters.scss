@@ -21,7 +21,6 @@
     @include fontPoppinsMedium;
     border: 1px solid $color-c1d;
     height: 30px;
-    font-size: 1rem;
   }
 }
 
@@ -179,15 +178,3 @@
     background: #f9f9f9;
   }
 }
-
-/* #price-slider__value-lower {
-  &::after {
-    content: '—';
-    display: block;
-    position: absolute;
-    color: #D1D1D1;
-    width: 10px;
-    height: 10px;
-    bottom: 0;
-  }
-} */

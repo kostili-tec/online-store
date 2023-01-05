@@ -23,6 +23,7 @@ export function createPromo(): HTMLElement {
   const promoInputContainer = createElement('div', { className: 'total-container__promo-container' });
   const aplliedPromos = createElement('div', { className: 'total-container__promo-applied' });
   if (store.promos.getCount()) {
+    subTotalSum.classList.add('subtotal-discounted');
     aplliedPromos.append(
       AppliedTitle(),
       ...store.promos.getAll().map((code) => createAppliedPromo(code, aplliedPromos)),
@@ -70,9 +71,12 @@ export function createPromo(): HTMLElement {
   );
 
   untilReload(
-    onPromoChange.subscribe(
-      () => (totalSum.textContent = `${(cartTotal * (1 - store.promos.getDiscountTotal())).toFixed(2)} USD`),
-    ),
+    onPromoChange.subscribe(() => {
+      const discount = store.promos.getDiscountTotal();
+      if (discount > 0) subTotalSum.classList.add('subtotal-discounted');
+      else subTotalSum.classList.remove('subtotal-discounted');
+      totalSum.textContent = `${(cartTotal * (1 - discount)).toFixed(2)} USD`;
+    }),
   );
 
   totalContainer.append(

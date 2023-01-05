@@ -6,6 +6,7 @@ import { Spinner } from '../components/Spinner';
 import { Slider } from '../components/imageSlider';
 import { showModal } from '../components/modal';
 import { Checkout } from '../components/Checkout';
+import { store } from '../store';
 
 export async function ProductDetails(container: HTMLElement, product: Partial<IQueryParameters>) {
   container.replaceChildren(Spinner());
@@ -138,7 +139,11 @@ function createProductBuy(product: IProduct): HTMLDivElement {
   const buyNowButton = document.createElement('button');
   buyNowButton.classList.add('buttons-container__button', 'primary-button');
   buyNowButton.textContent = 'Buy Now';
-  buyNowButton.addEventListener('click', () => showModal(Checkout));
+  buyNowButton.addEventListener('click', (e) => {
+    !store.cart.getCountById(product.id) && store.cart.add(product.id, product.price);
+    navigate('/cart', e);
+    showModal(Checkout);
+  });
 
   const addButton = CartAddButton(product);
   addButton.classList.add('buttons-container__button', 'secondary-button');
