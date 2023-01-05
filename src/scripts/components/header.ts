@@ -1,4 +1,4 @@
-import { onCartChange } from '../events';
+import { onCartChange, onPageReload, onQueryChange } from '../events';
 import { navigate, queryParams } from '../router';
 import { store } from '../store';
 
@@ -19,8 +19,11 @@ export function createHeader(): HTMLElement {
   searchInput.type = 'text';
   searchInput.placeholder = 'Search Products, categories ...';
   searchInput.onchange = () => {
-    queryParams.set('search', searchInput.value);
+    if (window.location.pathname === '/') queryParams.set('search', searchInput.value);
+    else navigate('/?search=' + searchInput.value);
   };
+  onPageReload.subscribe(() => (searchInput.value = queryParams.get('search')));
+  onQueryChange.subscribe((query) => (searchInput.value = query.search ?? ''));
 
   const searchButton = document.createElement('button');
   searchButton.classList.add('search-container__button');

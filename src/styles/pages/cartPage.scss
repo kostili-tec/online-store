@@ -131,6 +131,7 @@
 }
 
 .cart-product__card {
+  padding-top: 20px;
   h4 {
     margin-top: 0;
     &::first-letter {
@@ -168,7 +169,7 @@
   border: none;
   cursor: pointer;  
   position: absolute;
-  transform: translate(6px, -7px);
+  transform: translate(12px, -14px);
   &:hover > .cross-svg {    
       fill: $color-black-headers;    
   }
@@ -335,4 +336,8 @@
   h3 {
     font-size: 26px;
   }
+}
+
+.subtotal-discounted {
+  text-decoration: line-through;
 }

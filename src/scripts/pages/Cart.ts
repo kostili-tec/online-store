@@ -3,7 +3,7 @@ import { showError } from '../components/errors';
 import { store } from '../store';
 import { getProducts } from '../testApi';
 import { IProduct } from '../testApi';
-import { navigate } from '../router';
+import { navigate, queryParams } from '../router';
 import { createProductSpec } from './ProductDetails';
 import { createElement, createSvg } from '../components/utils';
 import { createPromo } from '../components/totalPromo';
@@ -34,14 +34,29 @@ export async function Cart(container: HTMLElement): Promise<void> {
     cardsContainer.replaceChildren(
       ...slice.map((item, index) => {
         const product = findProduct(products, item.id);
-        const productNumber = index + perPage * pageNumber + 1;
+        const productNumber: number = index + perPage * pageNumber + 1;
         return (product && cartProductCard(product, item.count, productNumber)) ?? '';
       }),
     );
   };
-  showPage(0, 3);
 
-  const controllPagination = topBar(showPage);
+  let perPage = Number(queryParams.get('limit')) || 3;
+  if (![3, 5, 10, 20].includes(perPage)) {
+    perPage = 3;
+    queryParams.set('limit', '3');
+  }
+  const maxPage = Math.ceil(store.cart.getItemsAll().length / perPage);
+  let currentPage = Number(queryParams.get('page')) || 0;
+  if (currentPage >= maxPage) {
+    currentPage = maxPage - 1;
+    queryParams.set('page', String(currentPage));
+  }
+
+  const state = { currentPage, perPage, maxPage };
+
+  showPage(state.currentPage, state.perPage);
+
+  const controllPagination = topBar(showPage, state);
   productsContainer.append(controllPagination, cardsContainer);
 
   const promo = createPromo();
@@ -50,9 +65,10 @@ export async function Cart(container: HTMLElement): Promise<void> {
   container.replaceChildren(cartContainer);
 }
 
-function topBar(showPage: (pageNumber: number, perPage: number) => void): HTMLElement {
-  const state = { currentPage: 0, perPage: 3, maxPage: Math.ceil(store.cart.getItemsAll().length / 3) };
-
+function topBar(
+  showPage: (pageNumber: number, perPage: number) => void,
+  state: { currentPage: number; perPage: number; maxPage: number },
+): HTMLElement {
   const topBarContainer = createElement('div', { className: 'products__top-container' });
   const topTitle = createElement('h2', { textContent: 'Cart' });
 
@@ -68,6 +84,7 @@ function topBar(showPage: (pageNumber: number, perPage: number) => void): HTMLEl
     const selectOption = document.createElement('option');
     selectOption.value = String(el);
     selectOption.textContent = String(el);
+    if (state.perPage === el) selectOption.selected = true;
     itemsSelect.append(selectOption);
   });
   customSelect.append(itemsSelect);
@@ -83,6 +100,7 @@ function topBar(showPage: (pageNumber: number, perPage: number) => void): HTMLEl
   rightButton.onclick = () => {
     if (state.currentPage < state.maxPage - 1) {
       state.currentPage += 1;
+      queryParams.set('page', String(state.currentPage));
       numberPageSpan.textContent = String(state.currentPage + 1);
       showPage(state.currentPage, state.perPage);
     }
@@ -90,6 +108,7 @@ function topBar(showPage: (pageNumber: number, perPage: number) => void): HTMLEl
   leftButton.onclick = () => {
     if (state.currentPage > 0) {
       state.currentPage -= 1;
+      queryParams.set('page', String(state.currentPage));
       numberPageSpan.textContent = String(state.currentPage + 1);
       showPage(state.currentPage, state.perPage);
     }
@@ -97,9 +116,11 @@ function topBar(showPage: (pageNumber: number, perPage: number) => void): HTMLEl
 
   itemsSelect.oninput = () => {
     state.perPage = Number(itemsSelect.value);
+    queryParams.set('limit', itemsSelect.value);
     state.maxPage = Math.ceil(store.cart.getItemsAll().length / state.perPage);
     if (state.currentPage >= state.maxPage) {
       state.currentPage = state.maxPage - 1;
+      queryParams.set('page', String(state.currentPage));
       numberPageSpan.textContent = String(state.currentPage + 1);
     }
     showPage(state.currentPage, state.perPage);
