@@ -79,7 +79,7 @@ const inputs: InputsInterface = {
   },
   expDate: {
     className: 'expdate-input',
-    pattern: /^(0[1-9]|1[0-2])+[0-9]{2}/,
+    pattern: /^(0[1-9]|1[0-2])+[2-9]{1}[3-9]{1}/,
     caption: 'Valid through',
     autocomplete: 'cc-exp',
     errorMsg: 'Use MM/YY format',

@@ -164,15 +164,25 @@ function createNoUiSlider(
   });
 
   inputs[0].addEventListener('change', function () {
-    (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value]);
+    (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value], false);
+    queryParams.set(rangeName, `${inputs[0].value},${inputs[1].value}`);
   });
   inputs[1].addEventListener('change', function () {
-    (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value]);
+    (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value], false);
+    queryParams.set(rangeName, `${inputs[0].value},${inputs[1].value}`);
   });
 
   untilReload(
     onQueryChange.subscribe((query) => {
       if (!query[rangeName]) (snapSlider as noUiSlider.target).noUiSlider?.set([minRange, maxRange], false);
+    }),
+  );
+
+  untilReload(
+    onFilteredProducts.subscribe((products) => {
+      const minVal = getMinValue(rangeName as keyof IProduct, products);
+      const maxVal = getMaxValue(rangeName as keyof IProduct, products);
+      (snapSlider as noUiSlider.target).noUiSlider?.set([minVal, maxVal], false);
     }),
   );
 
