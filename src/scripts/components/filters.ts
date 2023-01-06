@@ -164,10 +164,12 @@ function createNoUiSlider(
   });
 
   inputs[0].addEventListener('change', function () {
-    (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value]);
+    (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value], false);
+    queryParams.set(rangeName, `${inputs[0].value},${inputs[1].value}`);
   });
   inputs[1].addEventListener('change', function () {
-    (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value]);
+    (snapSlider as noUiSlider.target).noUiSlider?.set([inputs[0].value, inputs[1].value], false);
+    queryParams.set(rangeName, `${inputs[0].value},${inputs[1].value}`);
   });
 
   untilReload(
