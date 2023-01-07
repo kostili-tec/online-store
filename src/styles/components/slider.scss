@@ -1,8 +1,14 @@
 .slider-container {
+  flex: 1;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 1rem;
+}
+
+.slider__img-container {
+  flex: 1;
+  height: 460px;
 }
 
 .slider-vertical {
@@ -38,8 +44,8 @@
 
 .slider__main-image {
   width: 100%;
-  height: auto;
-  vertical-align: middle;
+  height: 100%;
+  //vertical-align: middle;
   object-fit: contain;
   cursor: zoom-in;
 }
