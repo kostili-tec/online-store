@@ -13,7 +13,6 @@ export async function Home(container: HTMLElement, query: Partial<IQueryParamete
 
   const data: IProducts | null = await getProducts();
   if (!data?.products) {
-    console.log('shit no products');
     return;
   }
   const leftFilters = createFilters(data.products);
