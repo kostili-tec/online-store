@@ -5,9 +5,9 @@ module.exports = {
   testPathIgnorePatterns: ['\\\\node_modules\\\\'], // где тесты искать не нужно
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
   moduleNameMapper: {
-    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|webp|ttf|woff|woff2)$': "<rootDir>/tests/assetsStub.js",
-    },
+    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|webp|ttf|woff|woff2)$': '<rootDir>/tests/assetsStub.js',
+  },
   transform: {
-      '^.+\\.(js|jsx)?$': 'ts-jest',
+    '^.+\\.(js|jsx)?$': 'ts-jest',
   },
 };

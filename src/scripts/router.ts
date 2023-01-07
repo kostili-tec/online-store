@@ -48,7 +48,7 @@ const router: { routes: IRoutes; current: string } = {
   current: '',
 };
 
-class SearchParams {
+export class SearchParams {
   private updateHistory(query: URLSearchParams) {
     const path = window.location.pathname;
     const params = query.toString();
