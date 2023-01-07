@@ -9,7 +9,7 @@
     "serve": "webpack serve",
     "lint": "eslint 'src/**/*.{js,ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "repository": {
     "type": "git",
