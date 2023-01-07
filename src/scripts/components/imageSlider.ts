@@ -22,7 +22,7 @@ export class Slider {
     this.reverseImages = [...this.reverseImgs()];
     const sliderContainer = createElement('div', { className: 'slider-container' });
     const verticalContainer = createElement('div', { className: 'slider-vertical' });
-    const fullImageContainer = createElement('div');
+    const fullImageContainer = createElement('div', { className: 'slider__img-container' });
 
     this.fullImage = new Image();
     this.fullImage.classList.add('slider__main-image');
