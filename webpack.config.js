@@ -35,7 +35,10 @@ const config = {
       exclude: 'node_modules',
     }),
     new CopyPlugin({
-      patterns: [{ from: './src/data', to: 'data' }],
+      patterns: [
+        { from: './src/data', to: 'data' },
+        { from: 'netlify.toml', to: '' },
+      ],
     }),
   ],
   module: {
