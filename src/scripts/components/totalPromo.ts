@@ -4,7 +4,8 @@ import { Checkout } from './Checkout';
 import { showModal } from './modal';
 import sprite from '../../assets/svg/sprite.svg';
 import { onCartChange, onPromoChange, untilReload } from '../events';
-import { checkPromo, IPromoCode } from '../testApi';
+import { checkPromo } from '../testApi';
+import { IPromoCode } from '../interfaces';
 
 export function createPromo(): HTMLElement {
   const totalContainer = createElement('div', { className: 'total-container' });

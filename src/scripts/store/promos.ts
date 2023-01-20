@@ -1,5 +1,5 @@
 import { onPromoChange } from '../events';
-import { IPromoCode } from '../testApi';
+import { IPromoCode } from '../interfaces';
 
 export class Promos {
   private appliedPromos: IPromoCode[] = [];

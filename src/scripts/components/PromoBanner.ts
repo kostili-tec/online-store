@@ -1,15 +1,10 @@
 import { Timer, createElement, createImage } from './utils';
 import { toaster } from './toast';
-
 import newcomer from '../../assets/promos/newcomer.webp';
 import student from '../../assets/promos/student.webp';
 import ny from '../../assets/promos/ny.webp';
 import { onPageReload } from '../events';
-
-interface IPromoBanner {
-  code: string;
-  src: string;
-}
+import { IPromoBanner } from '../interfaces';
 
 const promoBanners: IPromoBanner[] = [
   { code: 'NEWCOMER', src: newcomer },

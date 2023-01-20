@@ -1,10 +1,10 @@
 import * as noUiSlider from 'nouislider';
 import 'nouislider/dist/nouislider.css';
-import { IProduct } from '../testApi';
-import { IQueryParameters, queryParams } from '../router';
+import { queryParams } from '../router';
 import { onFilteredProducts, onQueryChange, untilReload } from '../events';
 import { createElement } from './utils';
 import { toaster } from './toast';
+import { ICategory, IQueryParameters, IProduct } from '../interfaces';
 
 export function createFilters(products: IProduct[]) {
   const filtersContainer = document.createElement('div');
@@ -201,10 +201,6 @@ function createNoUiSlider(
   return snapSlider;
 }
 
-interface ICategory {
-  title: string;
-  count: number;
-}
 function getCategories(products: IProduct[], dataKey: IProduct['category'] | IProduct['brand']): ICategory[] {
   if (dataKey === 'category' || dataKey === 'brand') {
     const categories = products.map((product) => product[dataKey]);

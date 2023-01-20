@@ -1,5 +1,5 @@
-import { IQueryParameters, navigate } from '../router';
-import { getProducts, IProducts, IProduct } from '../testApi';
+import { navigate } from '../router';
+import { getProducts } from '../testApi';
 import { CartAddButton } from '../components/CartAddButton';
 import { showError } from '../components/errors';
 import { Spinner } from '../components/Spinner';
@@ -7,6 +7,7 @@ import { Slider } from '../components/imageSlider';
 import { showModal } from '../components/modal';
 import { Checkout } from '../components/Checkout';
 import { store } from '../store';
+import { IQueryParameters, IProducts, IProduct } from '../interfaces';
 
 export async function ProductDetails(container: HTMLElement, product: Partial<IQueryParameters>) {
   container.replaceChildren(Spinner());

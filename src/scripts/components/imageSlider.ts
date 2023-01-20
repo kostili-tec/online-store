@@ -1,9 +1,5 @@
 import { createElement, createSvg } from './utils';
-
-enum SliderButtons {
-  left,
-  right,
-}
+import { SliderButtons } from '../interfaces';
 
 export class Slider {
   images: string[];
