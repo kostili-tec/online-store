@@ -1,32 +1,4 @@
-export enum searchableParams {
-  category = 'category',
-  brand = 'brand',
-  title = 'title',
-  description = 'description',
-}
-
-export interface IProduct {
-  id: number;
-  [searchableParams.title]: string;
-  [searchableParams.description]: string;
-  price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  [searchableParams.brand]: string;
-  [searchableParams.category]: string;
-  thumbnail: string;
-  images: string[];
-}
-
-export interface IProducts {
-  products: IProduct[];
-}
-
-export interface IPromoCode {
-  name: string;
-  discount: number;
-}
+import { IPromoCode, IProducts } from './interfaces';
 
 const promoCodes: IPromoCode[] = [
   {

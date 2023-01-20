@@ -1,13 +1,5 @@
-import { IQueryParameters } from './router';
-import { IProduct } from './testApi';
-import { CartEventStatus } from './store/cart';
-
-type TCallback<DataType> = (data: DataType) => void;
-
-interface IListner<DataType> {
-  callback: TCallback<DataType>;
-  once?: boolean;
-}
+import { CartEventStatus } from './interfaces';
+import { TCallback, IListner, IQueryParameters, IProduct } from './interfaces';
 
 class EventManager<DataType> {
   private listners: IListner<DataType>[] = [];

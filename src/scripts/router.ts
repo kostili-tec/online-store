@@ -3,28 +3,10 @@ import { Home } from './pages/Home';
 import { ProductDetails } from './pages/ProductDetails';
 import { Cart } from './pages/Cart';
 import { onPageReload, onQueryChange } from './events';
+import { IQueryParameters, IRoutes } from './interfaces';
 
 export const root = document.createElement('main');
 root.className = 'main';
-
-export interface IQueryParameters {
-  id: string;
-  category: string;
-  brand: string;
-  sort: string;
-  search: string;
-  price: string;
-  stock: string;
-  view: string;
-  page: string;
-  limit: string;
-}
-interface IRoutes {
-  [key: string]: {
-    name: string;
-    page: (container: HTMLElement, params: Partial<IQueryParameters>) => void;
-  };
-}
 
 const router: { routes: IRoutes; current: string } = {
   routes: {

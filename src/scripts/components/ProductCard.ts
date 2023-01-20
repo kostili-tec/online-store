@@ -1,5 +1,4 @@
-//import '@/styles/components/ProductCard.scss';
-import { IProduct } from '../testApi';
+import { IProduct } from '../interfaces';
 import { navigate } from '../router';
 import { CartAddButton } from './CartAddButton';
 

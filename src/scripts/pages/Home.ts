@@ -1,5 +1,4 @@
-import { IQueryParameters } from '../router';
-import { getProducts, IProducts, IProduct, searchableParams } from '../testApi';
+import { getProducts } from '../testApi';
 import { createFilters } from '../components/filters';
 import { ProductCard } from '../components/ProductCard';
 import { ProductsTopbar } from '../components/ProductsTopbar';
@@ -7,6 +6,7 @@ import { onFilteredProducts, onQueryChange, untilReload } from '../events';
 import { Spinner } from '../components/Spinner';
 import { PromoBanner } from '../components/PromoBanner';
 import { createElement } from '../components/utils';
+import { IQueryParameters, IProducts, IProduct, searchableParams } from '../interfaces';
 
 export async function Home(container: HTMLElement, query: Partial<IQueryParameters>) {
   container.replaceChildren(Spinner());

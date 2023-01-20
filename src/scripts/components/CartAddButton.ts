@@ -1,5 +1,5 @@
 import { store } from '../store';
-import { IProduct } from '../testApi';
+import { IProduct } from '../interfaces';
 
 export function CartAddButton(product: IProduct): HTMLElement {
   const cartButton = document.createElement('button');

@@ -3,32 +3,7 @@ import { navigate } from '../router';
 import { Spinner } from './Spinner';
 import { store } from '../store';
 import { createElement, createSvg } from './utils';
-
-interface IFormatter {
-  format: (arg: string) => string;
-  deformat: (arg: string) => string;
-}
-
-interface InputDataInterface {
-  pattern: RegExp;
-  caption: string;
-  autocomplete: string;
-  errorMsg: string;
-  type?: string;
-  formatter?: IFormatter;
-  className?: string;
-}
-
-interface InputsInterface {
-  name: InputDataInterface;
-  phone: InputDataInterface;
-  email: InputDataInterface;
-  address: InputDataInterface;
-  ccNumber: InputDataInterface;
-  cardholder: InputDataInterface;
-  expDate: InputDataInterface;
-  cvc: InputDataInterface;
-}
+import { InputsInterface, InputDataInterface } from '../interfaces';
 
 const inputs: InputsInterface = {
   name: {

@@ -2,12 +2,12 @@ import { Spinner } from '../components/Spinner';
 import { showError } from '../components/errors';
 import { store } from '../store';
 import { getProducts } from '../testApi';
-import { IProduct } from '../testApi';
 import { navigate, queryParams } from '../router';
 import { createProductSpec } from './ProductDetails';
 import { createElement, createSvg } from '../components/utils';
 import { createPromo } from '../components/totalPromo';
 import { onCartChange, untilReload } from '../events';
+import { IProduct } from '../interfaces';
 
 export async function Cart(container: HTMLElement): Promise<void> {
   const cartItems = store.cart.getItemsAll();

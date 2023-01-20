@@ -1,17 +1,5 @@
 import { onCartChange } from '../events';
-
-export enum CartEventStatus {
-  added = 'added',
-  deleted = 'deleted',
-  updated = 'updated',
-  cleared = 'cleared',
-}
-
-export interface ICartItem {
-  id: number;
-  count: number;
-  price: number;
-}
+import { CartEventStatus, ICartItem } from '../interfaces';
 
 function isCartItems(data: unknown): data is ICartItem[] {
   if (!Array.isArray(data)) return false;
