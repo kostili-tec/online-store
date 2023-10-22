@@ -1,0 +1,104 @@
+.product-card {
+  display: flex;
+  gap: 15px;
+  border-radius: 12px;
+  border: 1px solid $color-gray-border;
+  padding: 16px;
+  position: relative;
+  font-size: 14px;
+  flex: 1;
+  &.card-grid{
+    font-size: 12px;
+    gap: 0;
+    flex-direction: column;
+    flex: 0 0 268px;
+    width: 268px;
+    height: 380px;
+    .card-info__desc {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .product-card__options {
+      flex-direction: row;
+      align-items: center;
+      gap: 0;
+    }
+    .product-card__image {
+      width: 100%;
+      height: 180px;
+    }
+  }
+  &__discount {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+  }
+  &__image {
+    border-radius: 12px;
+    height: 150px;
+    width: 220px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  &__info {
+    flex: 1;
+  }
+  &__options {
+    display: flex;
+    flex-direction: column;
+    align-items:  end;
+    gap: 20px;
+  }
+}
+.card-info {
+  &__title {
+    @include fontPoppinsBold;
+    font-size: 1.25em;
+    margin: 10px 0 4px;
+    cursor: pointer;
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+  &__desc {
+    @include fontOpenSans;
+    margin: 0;
+    color: $color-c1b;
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+  &__rating {
+    mask-image: url(../assets/svg/rating-star.svg);
+    mask-repeat: repeat-x;
+    -webkit-mask-image: url(../assets/svg/rating-star.svg);
+    -webkit-mask-repeat: repeat-x;
+    width: 90px;
+    height: 16px;
+    margin-top: 13px;
+  }
+  &__lowstock {
+    color: $color-alert;
+  }
+}
+
+.card-pricing {
+    flex: 1;
+  &__discounted {
+    @include fontPoppinsSemiBold;
+    font-size: 1.5em;
+    margin: 0;
+  }
+  &__original {
+    @include fontPoppinsMedium;
+    margin: 0;
+    color: $color-c1c;
+    text-decoration: line-through;
+  }
+}
+
+.card-buttons {
+  display: flex;
+  gap: 10px;
+}

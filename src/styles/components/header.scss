@@ -1,0 +1,113 @@
+.header {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 45px;
+  max-width: 1260px;
+  width: 100%;
+  height: 110px;
+  background: $color-white;
+}
+
+.header-logo {
+  @include fontPoppinsBold;
+  font-size: 25px;
+  color: $color-black-headers;
+  line-height: 22px;
+  cursor: pointer;
+}
+
+.header__search-container {
+  position: relative;
+}
+
+.search-container__input {
+  @include fontOpenSans;
+  padding-left: 22px;
+  font-size: 14px;
+  color: $color-black-headers;
+  border: 1px solid $color-gray-border;
+  outline-color: $color-gray-border;
+  border-radius: 12px;
+  width: 330px;
+  height: 42px;
+  &:focus-visible, &:focus {
+    outline-color: $color-gray-border;
+  }
+}
+.search-container__button{
+  width: 42px;
+  height: 42px;
+  border: none;
+  background-color: transparent;
+  background-image: url('../assets/svg/glass.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transition: ease-in 0.2s;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.header__cash-container {
+  @include fontPoppinsMedium;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 270px;
+  justify-content: flex-end;
+}
+
+.cash-container__span-container {
+  color: $color-black-headers;
+}
+
+.span-container__span {
+  margin-right: 5px;
+}
+
+.header__basket-container {
+  position: relative;
+}
+
+.basket-container__total {
+  @include fontPoppinsBold;
+  font-size: 12px;
+  background: #E6704B;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: $color-white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  transform: translate(0px, -6px);
+  z-index: 2;
+  cursor: default;
+  pointer-events: none;
+}
+
+.basket-container__basket-button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background-color: transparent;
+  background-image: url('../assets/svg/basket.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 30px 30px;
+  cursor: pointer;
+  transition: ease-in 0.2s;
+  &:hover {
+    transform: scale(1.1);
+  }
+}

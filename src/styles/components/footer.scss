@@ -1,0 +1,43 @@
+.footer {
+  flex-shrink: 0;
+  margin: 0 auto;
+  padding: 0 45px;
+  display: flex;
+  height: 130px;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1260px;
+  width: 100%;
+  background: $color-white;
+}
+
+.footer__authors-container {
+  display: flex;
+  flex-direction: column;
+  a {
+    @include fontPoppinsMedium;
+    text-decoration: none;
+    font-size: 1rem;
+    color: $color-black-headers;
+    transition: ease-in 0.2s;
+    &:hover {
+      color: rgb(71, 71, 71);
+      transform: scale(1.1);
+    }
+  }
+}
+
+.footer-year {
+  @include fontPoppinsBold;
+  font-size: 2rem;
+}
+
+.footer-course {
+  width: 100px;
+  img {
+    transition: ease-in 0.2s;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

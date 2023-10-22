@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@500;600;700&display=swap');
+@import 'components/vars';
+@import 'components/mixins';
+@import 'components/buttons';
+@import 'components/tags';
+@import 'components/modal';
+@import 'components/toast';
+@import 'components/errors';
+@import 'components/Spinner';
+@import 'components/header';
+@import 'components/mainContainer';
+@import 'components/ProductCard';
+@import 'components/ProductTopbar';
+@import 'components/footer';
+@import 'components/filters';
+@import 'components/PromoBanner';
+@import 'components/slider';
+@import 'pages/Home';
+@import 'pages/detailsPage';
+@import 'pages/cartPage';
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background: $color-body-bg;
+  margin: 0 auto;
+  height: 100%;
+}
